@@ -7,6 +7,8 @@ package org.geopoke;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,39 +29,44 @@ import name.antonsmirnov.javafx.dialog.Dialog;
  * @author Michael
  */
 public class CacheDetailsNode extends BorderPane {
-    
+
     private Geocache cache;
-    
+    private Text label;
+    private List<LabelListener> listeners;
+
     public CacheDetailsNode(final Geocache cache, final CacheList mainList) {
         this.cache = cache;
+        listeners = new ArrayList<>();
         VBox centre = new VBox();
+        label = new Text();
         Text name = new Text(cache.getName() + " (" + cache.getGcNum() + ")");
         name.setStyle("-fx-font-weight: bold;");
-        if(cache.isDisabledWarning()) {
+        if (cache.isDisabledWarning()) {
             name.setFill(Color.RED);
             Tooltip.install(this, new Tooltip("This cache (" + cache.getGcNum() + ") is currently unavailable."));
-        }
-        else if(cache.isLogWarning()) {
+        } else if (cache.isLogWarning()) {
             name.setFill(Color.ORANGE);
             Tooltip.install(this, new Tooltip("The last few logs for this cache have been DNF's."));
         }
         Text coords = new Text(cache.getBestCoords());
-        if(!cache.hasAccurateCoords()) {
+        if (!cache.hasAccurateCoords()) {
             coords.setFill(Color.RED);
             Tooltip.install(coords, new Tooltip("These co-ordinates are probably not accurate.\nThey may represent a starting point, but you will need to solve the puzzle behind the cache first!"));
         }
         Label hint = new Label(cache.getHint());
         hint.setWrapText(true);
-        centre.getChildren().addAll(name, coords, hint);
+        HBox topBox = new HBox();
+        topBox.setSpacing(10);
+        topBox.getChildren().addAll(label, name);
+        centre.getChildren().addAll(topBox, coords, hint);
         setCenter(centre);
-        
+
         HBox leftBox = new HBox();
         leftBox.setSpacing(5);
         VBox buttonBox = new VBox();
         buttonBox.setPadding(Insets.EMPTY);
-        Button urlButton = new Button("",new ImageView(new Image("file:img/url.png")));
+        Button urlButton = new Button("", new ImageView(new Image("file:img/url.png")));
         urlButton.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent t) {
                 try {
@@ -70,9 +77,8 @@ public class CacheDetailsNode extends BorderPane {
             }
         });
         buttonBox.getChildren().add(urlButton);
-        Button removeButton = new Button("",new ImageView(new Image("file:img/remove.png")));
+        Button removeButton = new Button("", new ImageView(new Image("file:img/remove.png")));
         removeButton.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent t) {
                 mainList.removeCache(CacheDetailsNode.this);
@@ -84,8 +90,29 @@ public class CacheDetailsNode extends BorderPane {
         setLeft(leftBox);
     }
 
+    public void addLabelListener(LabelListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeLabelListener(LabelListener listener) {
+        listeners.remove(listener);
+    }
+
+    public void setLabel(String labelText) {
+        if (!label.getText().equals(labelText)) {
+            String oldLabel = label.getText();
+            this.label.setText(labelText);
+            for (LabelListener listener : listeners) {
+                listener.updated(oldLabel, labelText);
+            }
+        }
+    }
+
+    public String getLabel() {
+        return label.getText();
+    }
+
     public Geocache getCache() {
         return cache;
     }
-    
 }

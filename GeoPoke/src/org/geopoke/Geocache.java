@@ -6,6 +6,7 @@ package org.geopoke;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -49,6 +50,9 @@ public class Geocache {
     }
 
     public String getBestCoords() {
+        if(coords==null) {
+            return null;
+        }
         if (coords.getNewCoords() == null) {
             return coords.getOldCoords();
         }
@@ -137,5 +141,27 @@ public class Geocache {
         Element child = doc.createElement(tagName);
         child.appendChild(doc.createTextNode(content));
         e.appendChild(child);
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 97 * hash + Objects.hashCode(this.gcNum);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Geocache other = (Geocache) obj;
+        if (!Objects.equals(this.gcNum, other.gcNum)) {
+            return false;
+        }
+        return true;
     }
 }

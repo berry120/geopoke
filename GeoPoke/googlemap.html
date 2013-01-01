@@ -16,13 +16,33 @@
                     center: latlng,
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     mapTypeControl: false,
-                    navigationControl: false,
+                    navigationControl: true,
                     streetViewControl: false,
                     backgroundColor: "#666970"
                 };
  
+                document.markermap = new Array();
                 document.geocoder = new google.maps.Geocoder();
                 document.map = new google.maps.Map(document.getElementById("map_canvas"),myOptions);
+                
+                document.fitAllMarkers = function fitAllMarkers() {
+                    var keys = document.keys();
+                    var bounds = new google.maps.LatLngBounds();
+                    for (var i=0, len = keys.length; i < len; i++) {
+                        bounds.extend(document.markermap[keys[i]].getPosition());
+                    }
+                    document.map.fitBounds(bounds);
+                }
+                
+                document.keys = function keys() {
+                    var keys = [];
+                    for(var key in document.markermap) {
+                        if(document.markermap.hasOwnProperty(key)) {
+                            keys.push(key);
+                        }
+                    }
+                    return keys;
+                }
  
                 document.zoomIn = function zoomIn() {
                     var zoomLevel = document.map.getZoom();
@@ -59,10 +79,12 @@
                         icon:image,
                         title:label
                     });
-                    google.maps.event.addListener(marker, "dragend", function(){
-                        marker.setAnimation(BOUNCE);
-
-                    });
+                    document.markermap[label]=marker;
+                }
+                
+                document.removeMarker = function removeMarker(label) {
+                    document.markermap[label].setMap(null);
+                    delete document.markermap[label];
                 }
  
                 document.goToLocation = function goToLocation(searchString) {

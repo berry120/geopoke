@@ -6,6 +6,8 @@ package org.geopoke;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -20,8 +22,10 @@ public class WorldMap extends BorderPane {
 
     private WebView webview;
     private boolean ready;
+    private Set<CacheDetailsNode> markers;
 
     public WorldMap() {
+        markers = new HashSet<>();
         ready = false;
         webview = new WebView();
         try {
@@ -44,8 +48,22 @@ public class WorldMap extends BorderPane {
         return ready;
     }
 
-    public void addMarker(String coords, String label) {
-        File labelImage = new LabelImageGenerator().generateLabelImage(label);
+    public void addMarker(final CacheDetailsNode node) {
+        markers.add(node);
+        updateMarker(node);
+        node.addLabelListener(new LabelListener() {
+
+            @Override
+            public void updated(String oldLabel, String newLabel) {
+                webview.getEngine().executeScript("document.removeMarker(\"" + oldLabel + "\")");
+                updateMarker(node);
+            }
+        });
+    }
+    
+    private void updateMarker(CacheDetailsNode node) {
+        String coords = node.getCache().getBestCoords();
+        File labelImage = new LabelImageGenerator().generateLabelImage(node.getLabel());
         String northDegrees = coords.substring(0, coords.indexOf('°'));
         boolean north = northDegrees.charAt(0) == 'N';
         northDegrees = northDegrees.substring(1).trim();
@@ -69,10 +87,13 @@ public class WorldMap extends BorderPane {
         if (!east) {
             lon *= -1;
         }
-        webview.getEngine().executeScript("document.addMarker(" + lat + "," + lon + ",\"" + labelImage.toURI().toString() + "\",\"" + label + "\")");
-        webview.getEngine().executeScript("document.goToLocation(\"" + coords + "\")");
+        webview.getEngine().executeScript("document.addMarker(" + lat + "," + lon + ",\"" + labelImage.toURI().toString() + "\",\"" + node.getLabel() + "\")");
+//        webview.getEngine().executeScript("document.goToLocation(\"" + coords + "\")");
+        webview.getEngine().executeScript("document.fitAllMarkers()");
     }
 
-    public void removeMarker(String coords) {
+    public void removeMarker(CacheDetailsNode node) {
+        webview.getEngine().executeScript("document.removeMarker(\"" + node.getLabel() + "\")");
+        markers.remove(node);
     }
 }
