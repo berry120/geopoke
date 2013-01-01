@@ -24,7 +24,7 @@
         
                     <!-- Header -->
                     <fo:block text-align="center" font-size="18pt" font-weight="bold">
-                        Geocache list
+                        Geocaches
                     </fo:block>
                     
                     <!-- Caches -->
@@ -44,11 +44,27 @@
                             </fo:block>
                             <xsl:if test="/caches/cache[position()]/hint">
                                 <fo:block text-align="left" padding-top="0.5em" font-style="italic">
-                                    Hint: <xsl:value-of select="hint"/>
+                                    Hint: 
+                                    <xsl:value-of select="hint"/>
                                 </fo:block>
                             </xsl:if>
-                            
-                            
+                        </xsl:for-each>
+                    </fo:block>
+                    
+<!--                    <fo:block text-align="center" font-size="18pt" font-weight="bold" page-break-before="always">
+                        Map Overview
+                    </fo:block>-->
+<!--                    <fo:block text-align="center" font-size="8pt">
+                        The numbers on the map correspond to the caches on the previous page, in order.
+                    </fo:block>-->
+                    
+                    <fo:block text-align="center">
+                        <xsl:for-each select="map"> 
+                            <fo:external-graphic height="10in" width="7in" content-height="scale-down-to-fit" content-width="scale-down-to-fit">
+                                <xsl:attribute name="src">
+                                    <xsl:value-of select="image"/>
+                                </xsl:attribute>
+                            </fo:external-graphic>
                         </xsl:for-each>
                     </fo:block>
         

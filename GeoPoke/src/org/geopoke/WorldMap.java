@@ -4,15 +4,22 @@
  */
 package org.geopoke;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.geometry.Bounds;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
+import javafx.stage.Window;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -44,6 +51,26 @@ public class WorldMap extends BorderPane {
         });
     }
 
+    /**
+     * Get a snapshot of the current map as an image.
+     * @return the current snapshot of the map.
+     */
+    public BufferedImage getSnapshot() {
+        Window window = getScene().getWindow();
+        Bounds b = localToScene(getBoundsInLocal());
+        int x = (int) Math.round(window.getX() + getScene().getX() + b.getMinX());
+        int y = (int) Math.round(window.getY() + getScene().getY() + b.getMinY());
+        int w = (int) Math.round(b.getWidth());
+        int h = (int) Math.round(b.getHeight());
+        try {
+            Robot robot = new Robot();
+            BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(x, y, w, h));
+            return image;
+        } catch (AWTException ex) {
+            return null;
+        }
+    }
+
     public boolean isReady() {
         return ready;
     }
@@ -52,7 +79,6 @@ public class WorldMap extends BorderPane {
         markers.add(node);
         updateMarker(node);
         node.addLabelListener(new LabelListener() {
-
             @Override
             public void updated(String oldLabel, String newLabel) {
                 webview.getEngine().executeScript("document.removeMarker(\"" + oldLabel + "\")");
@@ -60,7 +86,7 @@ public class WorldMap extends BorderPane {
             }
         });
     }
-    
+
     private void updateMarker(CacheDetailsNode node) {
         String coords = node.getCache().getBestCoords();
         File labelImage = new LabelImageGenerator().generateLabelImage(node.getLabel());

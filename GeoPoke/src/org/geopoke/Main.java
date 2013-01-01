@@ -7,8 +7,6 @@ package org.geopoke;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,8 +21,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import name.antonsmirnov.javafx.dialog.Dialog;
 
@@ -53,7 +49,7 @@ public class Main extends Application {
         pdfButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                File file = new ReportGenerator().generateReport(mainList.getCacheNodes(), null);
+                File file = new ReportGenerator().generateReport(mainList.getCacheNodes(), map.getSnapshot(), null);
                 try {
                     Desktop.getDesktop().open(file);
                 } catch (IOException ex) {

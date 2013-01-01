@@ -4,11 +4,15 @@
  */
 package org.geopoke;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -35,8 +39,17 @@ import org.w3c.dom.Element;
  */
 public class ReportGenerator {
 
-    public File generateReport(List<CacheDetailsNode> caches, File file) {
+    public File generateReport(List<CacheDetailsNode> caches, BufferedImage mapImg, File file) {
         try {
+            File mapFile = File.createTempFile("geopoke_map", ".png");
+            mapFile.deleteOnExit();
+            if (mapImg.getWidth() > mapImg.getHeight()) {
+                AffineTransform tx = new AffineTransform();
+                tx.rotate(Math.PI/2, mapImg.getWidth() / 2, mapImg.getHeight() / 2);
+                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+                mapImg = op.filter(mapImg, null);
+            }
+            ImageIO.write(mapImg, "png", mapFile);
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.newDocument();
@@ -44,6 +57,11 @@ public class ReportGenerator {
             for (CacheDetailsNode cache : caches) {
                 cache.addToXML(doc, rootElement);
             }
+            Element mapElement = doc.createElement("map");
+            Element imageElement = doc.createElement("image");
+            imageElement.appendChild(doc.createTextNode(mapFile.toURI().toString()));
+            mapElement.appendChild(imageElement);
+            rootElement.appendChild(mapElement);
             doc.appendChild(rootElement);
 
             File xsltfile = new File("style.xslt");
