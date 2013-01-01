@@ -111,38 +111,6 @@ public class Geocache {
         }
     }
 
-    public void addToXML(Document doc, Element root) {
-        Element cacheElem = doc.createElement("cache");
-        root.appendChild(cacheElem);
-        addTag("GC", getGcNum(), doc, cacheElem);
-        addTag("name", getName(), doc, cacheElem);
-        addTag("coords", getBestCoords(), doc, cacheElem);
-        addTag("hint", getHint(), doc, cacheElem);
-        addTag("description", getDescription(), doc, cacheElem);
-        addTag("difficulty", Integer.toString(getDifficulty()), doc, cacheElem);
-        addTag("terrain", Integer.toString(getTerrain()), doc, cacheElem);
-        addTag("type", getType().toString(), doc, cacheElem);
-        addTag("warning", getWarningString(), doc, cacheElem);
-    }
-
-    private String getWarningString() {
-        if (isDisabledWarning()) {
-            return "This cache is disabled - it's probably not there!";
-        } else if (!hasAccurateCoords()) {
-            return "This cache hasn't had more specific co-ordinates entered - the ones above are probably just a placeholder.";
-        } else if (isLogWarning()) {
-            return "The last few logs for this cache have been DNFs.";
-        } else {
-            return "";
-        }
-    }
-
-    private void addTag(String tagName, String content, Document doc, Element e) {
-        Element child = doc.createElement(tagName);
-        child.appendChild(doc.createTextNode(content));
-        e.appendChild(child);
-    }
-
     @Override
     public int hashCode() {
         int hash = 5;

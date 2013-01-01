@@ -53,7 +53,7 @@ public class Main extends Application {
         pdfButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
-                File file = new ReportGenerator().generateReport(mainList.getCaches(), null);
+                File file = new ReportGenerator().generateReport(mainList.getCacheNodes(), null);
                 try {
                     Desktop.getDesktop().open(file);
                 } catch (IOException ex) {

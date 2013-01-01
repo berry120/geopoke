@@ -31,7 +31,7 @@
                     <fo:block text-align="center" font-size="8pt" space-before="3em">
                         <xsl:for-each select="cache">
                             <fo:block text-align="left" padding-top="0.5em" font-weight="bold">
-                                <xsl:value-of select="name"/> (<xsl:value-of select="GC"/>)
+                                <xsl:value-of select="label"/> <xsl:value-of select="name"/> (<xsl:value-of select="GC"/>)
                             </fo:block>
                             <fo:block text-align="left" padding-top="0.5em" font-style="italic">
                                 <xsl:value-of select="coords"/>

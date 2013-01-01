@@ -55,6 +55,10 @@ public class CacheList extends VBox {
         return ret;
     }
 
+    public List<CacheDetailsNode> getCacheNodes() {
+        return new ArrayList<>(cacheDetailsNodes);
+    }
+
     public void removeCache(CacheDetailsNode node) {
         int pos = cacheDetailsNodes.indexOf(node);
         cacheDetailsNodes.remove(node);

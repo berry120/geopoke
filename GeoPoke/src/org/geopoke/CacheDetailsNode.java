@@ -23,6 +23,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import name.antonsmirnov.javafx.dialog.Dialog;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -116,5 +118,38 @@ public class CacheDetailsNode extends BorderPane {
 
     public Geocache getCache() {
         return cache;
+    }
+
+    public void addToXML(Document doc, Element root) {
+        Element cacheElem = doc.createElement("cache");
+        root.appendChild(cacheElem);
+        addTag("GC", cache.getGcNum(), doc, cacheElem);
+        addTag("label", label.getText(), doc, cacheElem);
+        addTag("name", cache.getName(), doc, cacheElem);
+        addTag("coords", cache.getBestCoords(), doc, cacheElem);
+        addTag("hint", cache.getHint(), doc, cacheElem);
+        addTag("description", cache.getDescription(), doc, cacheElem);
+        addTag("difficulty", Integer.toString(cache.getDifficulty()), doc, cacheElem);
+        addTag("terrain", Integer.toString(cache.getTerrain()), doc, cacheElem);
+        addTag("type", cache.getType().toString(), doc, cacheElem);
+        addTag("warning", getWarningString(), doc, cacheElem);
+    }
+
+    private String getWarningString() {
+        if (cache.isDisabledWarning()) {
+            return "This cache is disabled - it's probably not there!";
+        } else if (!cache.hasAccurateCoords()) {
+            return "This cache hasn't had more specific co-ordinates entered - the ones above are probably just a placeholder.";
+        } else if (cache.isLogWarning()) {
+            return "The last few logs for this cache have been DNFs.";
+        } else {
+            return "";
+        }
+    }
+
+    private void addTag(String tagName, String content, Document doc, Element e) {
+        Element child = doc.createElement(tagName);
+        child.appendChild(doc.createTextNode(content));
+        e.appendChild(child);
     }
 }
