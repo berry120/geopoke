@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?><!-- You may freely edit this file. See commented blocks below for --><!-- some examples of how to customize the build. --><!-- (If you delete it and reopen the project it will be recreated.) --><!-- By default, only the Clean and Build commands use this build script. --><project name="GeoPrinter" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
     <description>Builds, tests, and runs the project GeoPrinter.</description>
     <import file="nbproject/build-impl.xml"/>
+    
+    <target name="-post-jfx-jar">
+        <copy todir="${basedir}/${dist.dir}/img">
+            <fileset dir="img"/>
+        </copy>
+        <copy file="bubble.png" todir="${basedir}/${dist.dir}"/>
+        <copy file="googlemap.html" todir="${basedir}/${dist.dir}"/>
+        <copy file="style.xslt" todir="${basedir}/${dist.dir}"/>
+    </target>
+    
+    <target name="-post-jfx-deploy">
+        <fx:deploy width="${javafx.run.width}" height="${javafx.run.height}" 
+                  nativeBundles="all"
+                  outdir="${basedir}/${dist.dir}" outfile="${application.title}">
+            <fx:application name="${application.title}" mainClass="${javafx.main.class}"/>
+            <fx:resources>
+                <fx:fileset dir="${basedir}/${dist.dir}"/>
+            </fx:resources>
+            <fx:info title="${application.title}" vendor="${application.vendor}"/>
+        </fx:deploy>          
+    </target>
     <!--
 
     There exist several targets which are by default empty and which can be 
