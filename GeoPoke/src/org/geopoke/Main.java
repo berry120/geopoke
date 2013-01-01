@@ -72,6 +72,7 @@ public class Main extends Application {
             public void handle(ActionEvent t) {
                 statusLabel.setGettingCache();
                 topButton.setDisable(true);
+                topField.setDisable(true);
                 new Thread() {
                     public void run() {
                         final Geocache cache = session.getCache(topField.getText());
@@ -86,6 +87,7 @@ public class Main extends Application {
                                 }
                                 topField.clear();
                                 statusLabel.setIdle();
+                                topField.setDisable(false);
                                 topButton.setDisable(false);
                             }
                         });
