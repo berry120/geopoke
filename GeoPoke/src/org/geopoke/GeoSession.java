@@ -3,6 +3,7 @@ package org.geopoke;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import name.antonsmirnov.javafx.dialog.Dialog;
 import org.apache.commons.httpclient.Cookie;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpState;
@@ -41,8 +42,8 @@ public class GeoSession {
     }
 
     public Geocache getCacheFromURL(String url) {
-        GetMethod httpGet = new GetMethod(url);
         try {
+            GetMethod httpGet = new GetMethod(url);
             client.executeMethod(httpGet);
             return new CacheFactory().cacheFromPage(httpGet.getResponseBodyAsString());
         } catch (Exception ex) {

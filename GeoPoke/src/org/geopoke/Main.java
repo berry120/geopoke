@@ -75,7 +75,7 @@ public class Main extends Application {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                if (cache == null) {
+                                if (cache == null||cache.getBestCoords()==null) {
                                     Dialog.showError("Error retrieving Geocache",
                                             "Did you definitely specify a valid GC number or URL?");
                                 } else {
