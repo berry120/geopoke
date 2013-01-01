@@ -4,6 +4,7 @@
  */
 package org.geopoke;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -81,14 +82,26 @@ public class LoginStage extends Stage {
             public void handle(ActionEvent e) {
                 actiontarget.setFill(Color.FIREBRICK);
                 actiontarget.setText("Signing in...");
-                session = new GeoSession(userTextField.getText(), pwBox.getText());
-                if(session.login()) {
-                    actiontarget.setText("");
-                    hide();
-                }
-                else {
-                    actiontarget.setText("Login failed.");
-                }
+                btn.setDisable(true);
+                Thread loginThread = new Thread() {
+                    public void run() {
+                        session = new GeoSession(userTextField.getText(), pwBox.getText());
+                        Platform.runLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                btn.setDisable(false);
+                                if (session.login()) {
+                                    actiontarget.setText("");
+                                    hide();
+                                } else {
+                                    actiontarget.setText("Login failed.");
+                                }
+                            }
+                        });
+                    }
+                };
+                loginThread.start();
             }
         });
 

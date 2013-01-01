@@ -38,6 +38,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         session = new LoginStage().getSession();
+        if(session==null) { //Need a session to continue!
+            Platform.exit();
+        }
 
         primaryStage.getIcons().add(new Image("file:img/logo.png"));
         primaryStage.setTitle("Geopoke");
