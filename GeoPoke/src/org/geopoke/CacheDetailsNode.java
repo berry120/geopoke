@@ -39,13 +39,15 @@ public class CacheDetailsNode extends BorderPane {
         listeners = new ArrayList<>();
         VBox centre = new VBox();
         label = new Text();
-        Text name = new Text(cache.getName() + " (" + cache.getGcNum() + ")");
+        label.setStyle("-fx-font-weight: bold;");
+        Label name = new Label(cache.getName() + " (" + cache.getGcNum() + ")");
+        name.setWrapText(true);
         name.setStyle("-fx-font-weight: bold;");
         if (cache.isDisabledWarning()) {
-            name.setFill(Color.RED);
+            name.setStyle(name.getStyle() + " -fx-text-fill: red;");
             Tooltip.install(this, new Tooltip("This cache (" + cache.getGcNum() + ") is currently unavailable."));
         } else if (cache.isLogWarning()) {
-            name.setFill(Color.ORANGE);
+            name.setStyle(name.getStyle() + " -fx-text-fill: orange;");
             Tooltip.install(this, new Tooltip("The last few logs for this cache have been DNF's."));
         }
         Text coords = new Text(cache.getBestCoords());
