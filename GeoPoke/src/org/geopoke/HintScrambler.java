@@ -7,6 +7,9 @@ package org.geopoke;
 public class HintScrambler {
 
     public static String toggleScramble(String hint) {
+        if(hint==null) {
+            return null;
+        }
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < hint.length(); i++) {
             char c = hint.charAt(i);
