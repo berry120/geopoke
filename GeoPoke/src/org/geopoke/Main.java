@@ -59,6 +59,7 @@ public class Main extends Application {
         HBox gcBar = new HBox();
         Label gcLabel = new Label("GC / URL:");
         final Button gcButton = new Button("", new ImageView(new Image("file:img/add.png")));
+        gcButton.setDisable(true);
         Tooltip.install(gcButton, new Tooltip("Add the geocache to the list"));
         final TextField gcField = new TextField();
         gcField.textProperty().addListener(new ChangeListener<String>() {
