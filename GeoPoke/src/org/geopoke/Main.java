@@ -101,7 +101,6 @@ public class Main extends Application {
                                 gcField.clear();
                                 statusLabel.setIdle();
                                 gcField.setDisable(false);
-                                gcButton.setDisable(false);
                                 gcField.requestFocus();
                             }
                         });
