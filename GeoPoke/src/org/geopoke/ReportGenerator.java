@@ -9,8 +9,6 @@ import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Transparency;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -73,7 +71,7 @@ public class ReportGenerator {
             Document doc = docBuilder.newDocument();
             Element rootElement = doc.createElement("caches");
             for (CacheDetailsNode cache : caches) {
-                cache.addToXML(doc, rootElement);
+                cache.addToXML(doc, rootElement, true);
             }
             Element mapElement = doc.createElement("map");
             Element imageElement = doc.createElement("image");

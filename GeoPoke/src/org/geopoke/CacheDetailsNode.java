@@ -5,6 +5,7 @@
 package org.geopoke;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -120,7 +121,7 @@ public class CacheDetailsNode extends BorderPane {
         return cache;
     }
 
-    public void addToXML(Document doc, Element root) {
+    public void addToXML(Document doc, Element root, boolean qr) {
         Element cacheElem = doc.createElement("cache");
         root.appendChild(cacheElem);
         addTag("GC", cache.getGcNum(), doc, cacheElem);
@@ -133,6 +134,10 @@ public class CacheDetailsNode extends BorderPane {
         addTag("terrain", Integer.toString(cache.getTerrain()), doc, cacheElem);
         addTag("type", cache.getType().toString(), doc, cacheElem);
         addTag("warning", getWarningString(), doc, cacheElem);
+        if(qr) {
+            File f = new QRGenerator().generateQRCode(cache);
+            addTag("qr", f.toURI().toString(), doc, cacheElem);
+        }
     }
 
     private String getWarningString() {
