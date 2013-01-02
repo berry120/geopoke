@@ -34,6 +34,14 @@
                     document.map.fitBounds(bounds);
                 }
                 
+                document.removeAllMarkers = function removeAllMarkers() {
+                    var keys = document.keys();
+                    for (var i=0, len = keys.length; i < len; i++) {
+                        document.markermap[keys[i]].setMap(null);
+                        delete document.markermap[keys[i]];
+                    }
+                }
+                
                 document.keys = function keys() {
                     var keys = [];
                     for(var key in document.markermap) {

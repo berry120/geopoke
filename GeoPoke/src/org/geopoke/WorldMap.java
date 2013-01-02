@@ -8,7 +8,6 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -19,7 +18,6 @@ import javafx.geometry.Bounds;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -121,5 +119,10 @@ public class WorldMap extends BorderPane {
     public void removeMarker(CacheDetailsNode node) {
         webview.getEngine().executeScript("document.removeMarker(\"" + node.getLabel() + "\")");
         markers.remove(node);
+    }
+    
+    public void removeAllMarkers() {
+        webview.getEngine().executeScript("document.removeAllMarkers()");
+        markers.clear();
     }
 }

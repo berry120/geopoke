@@ -34,29 +34,39 @@ public class CacheList extends VBox {
         return false;
     }
 
-    public void addCache(Geocache cache) {
-        if (alreadyAdded(cache)) {
-            Dialog.showWarning("Already there!", "You've already added this cache to the list.");
-        } else {
-            CacheDetailsNode node = new CacheDetailsNode(cache, this);
-            cacheDetailsNodes.add(node);
-            node.setLabel(cacheDetailsNodes.size() + ".");
-            map.addMarker(node);
-            getChildren().add(node);
-            for(SizeListener listener : sizeListeners) {
-                listener.sizeChanged(cacheDetailsNodes.size()-1, cacheDetailsNodes.size());
-            }
-        }
-    }
-
     public List<Geocache> getCaches() {
         List<Geocache> ret = new ArrayList<>();
-        for (Node n : getChildren()) {
-            if (n instanceof CacheDetailsNode) {
-                ret.add(((CacheDetailsNode) n).getCache());
-            }
+        for (CacheDetailsNode node : cacheDetailsNodes) {
+            ret.add(node.getCache());
         }
         return ret;
+    }
+
+    public void addCache(Geocache... caches) {
+        addCache(null, caches);
+    }
+
+    public void addCache(ProgressUpdator updator, Geocache... caches) {
+        for (int i = 0; i < caches.length; i++) {
+            Geocache cache = caches[i];
+            if (alreadyAdded(cache)) {
+                if (caches.length == 1) {
+                    Dialog.showWarning("Already there!", "You've already added this cache to the list.");
+                }
+            } else {
+                CacheDetailsNode node = new CacheDetailsNode(cache, this);
+                cacheDetailsNodes.add(node);
+                node.setLabel(cacheDetailsNodes.size() + ".");
+                map.addMarker(node);
+                getChildren().add(node);
+                for (SizeListener listener : sizeListeners) {
+                    listener.sizeChanged(cacheDetailsNodes.size() - 1, cacheDetailsNodes.size());
+                }
+            }
+            if (updator != null) {
+                updator.update((double) (i + 1) / caches.length);
+            }
+        }
     }
 
     public List<CacheDetailsNode> getCacheNodes() {
@@ -75,11 +85,19 @@ public class CacheList extends VBox {
             listener.sizeChanged(cacheDetailsNodes.size() + 1, cacheDetailsNodes.size());
         }
     }
-    
+
+    public void removeAllCaches() {
+        map.removeAllMarkers();
+        for (CacheDetailsNode node : cacheDetailsNodes) {
+            getChildren().remove(node);
+        }
+        cacheDetailsNodes.clear();
+    }
+
     public void addSizeListener(SizeListener listener) {
         sizeListeners.add(listener);
     }
-    
+
     public void removeSizeListener(SizeListener listener) {
         sizeListeners.remove(listener);
     }
