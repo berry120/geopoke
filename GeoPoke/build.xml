@@ -2,7 +2,7 @@
     <description>Builds, tests, and runs the project GeoPrinter.</description>
     <import file="nbproject/build-impl.xml"/>
     
-    <target name="-post-jfx-jar">
+    <target name="-pre-jfx-deploy">
         <copy todir="${basedir}/${dist.dir}/img">
             <fileset dir="img"/>
         </copy>

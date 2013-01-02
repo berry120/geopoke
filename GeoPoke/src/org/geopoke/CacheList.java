@@ -17,6 +17,7 @@ import name.antonsmirnov.javafx.dialog.Dialog;
 public class CacheList extends VBox {
 
     private List<CacheDetailsNode> cacheDetailsNodes = new ArrayList<>();
+    private List<SizeListener> sizeListeners = new ArrayList<>();
     private WorldMap map;
 
     public CacheList(WorldMap map) {
@@ -42,6 +43,9 @@ public class CacheList extends VBox {
             node.setLabel(cacheDetailsNodes.size() + ".");
             map.addMarker(node);
             getChildren().add(node);
+            for(SizeListener listener : sizeListeners) {
+                listener.sizeChanged(cacheDetailsNodes.size()-1, cacheDetailsNodes.size());
+            }
         }
     }
 
@@ -67,5 +71,16 @@ public class CacheList extends VBox {
         for (int i = pos; i < cacheDetailsNodes.size(); i++) {
             cacheDetailsNodes.get(i).setLabel((i + 1) + ".");
         }
+        for (SizeListener listener : sizeListeners) {
+            listener.sizeChanged(cacheDetailsNodes.size() + 1, cacheDetailsNodes.size());
+        }
+    }
+    
+    public void addSizeListener(SizeListener listener) {
+        sizeListeners.add(listener);
+    }
+    
+    public void removeSizeListener(SizeListener listener) {
+        sizeListeners.remove(listener);
     }
 }

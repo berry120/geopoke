@@ -4,6 +4,11 @@
  */
 package org.geopoke;
 
+import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -39,15 +44,28 @@ import org.w3c.dom.Element;
  */
 public class ReportGenerator {
 
+    private BufferedImage rotate(BufferedImage image, double angle) {
+        angle = Math.toRadians(angle);
+        double sin = Math.abs(Math.sin(angle)), cos = Math.abs(Math.cos(angle));
+        int w = image.getWidth(), h = image.getHeight();
+        int neww = (int) Math.floor(w * cos + h * sin), newh = (int) Math.floor(h * cos + w * sin);
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice gd = ge.getDefaultScreenDevice();
+        GraphicsConfiguration gc = gd.getDefaultConfiguration();
+        BufferedImage result = gc.createCompatibleImage(neww, newh, Transparency.TRANSLUCENT);
+        Graphics2D g = result.createGraphics();
+        g.translate((neww - w) / 2, (newh - h) / 2);
+        g.rotate(angle, w / 2, h / 2);
+        g.drawRenderedImage(image, null);
+        return result;
+    }
+
     public File generateReport(List<CacheDetailsNode> caches, BufferedImage mapImg, File file) {
         try {
             File mapFile = File.createTempFile("geopoke_map", ".png");
             mapFile.deleteOnExit();
             if (mapImg.getWidth() > mapImg.getHeight()) {
-                AffineTransform tx = new AffineTransform();
-                tx.rotate(Math.PI/2, mapImg.getWidth() / 2, mapImg.getHeight() / 2);
-                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-                mapImg = op.filter(mapImg, null);
+                mapImg = rotate(mapImg, 90);
             }
             ImageIO.write(mapImg, "png", mapFile);
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -78,7 +96,7 @@ public class ReportGenerator {
             xslfoTransformer.transform(source, res);
             if (file == null) {
                 file = File.createTempFile("geopoke", ".pdf");
-//                file.deleteOnExit();
+                file.deleteOnExit();
             }
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 fos.write(outStream.toByteArray());
