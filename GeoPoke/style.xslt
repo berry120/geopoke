@@ -24,9 +24,9 @@
                 <fo:flow flow-name="xsl-region-body">
         
                     <!-- Header -->
-                    <fo:block text-align="center" font-size="18pt" font-weight="bold">
+<!--                    <fo:block text-align="center" font-size="18pt" font-weight="bold">
                         Geocaches
-                    </fo:block>
+                    </fo:block>-->
                     
                     <!-- Caches -->
                     <fo:block text-align="center" font-size="8pt" space-before="3em">
