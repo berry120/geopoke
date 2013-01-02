@@ -1,10 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.geopoke;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -29,10 +27,10 @@ import javafx.stage.Stage;
  * @author Michael
  */
 public class LoginStage extends Stage {
-    
+
     private Button btn;
     private GeoSession session;
-    
+
     public LoginStage() {
         initModality(Modality.APPLICATION_MODAL);
         getIcons().add(new Image("file:img/logo.png"));
@@ -42,7 +40,7 @@ public class LoginStage extends Stage {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-        
+
         Text scenetitle = new Text("Hello!");
         scenetitle.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
         grid.add(scenetitle, 0, 0, 2, 1);
@@ -51,6 +49,12 @@ public class LoginStage extends Stage {
         grid.add(userName, 0, 1);
 
         final TextField userTextField = new TextField();
+        userTextField.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                btn.fire();
+            }
+        });
         grid.add(userTextField, 1, 1);
 
         Label pw = new Label("Password:");
@@ -58,25 +62,32 @@ public class LoginStage extends Stage {
 
         final PasswordField pwBox = new PasswordField();
         pwBox.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent t) {
                 btn.fire();
             }
         });
         grid.add(pwBox, 1, 2);
-        
+
         btn = new Button("Sign in");
+        btn.setDisable(true);
+        userTextField.textProperty().addListener(new ChangeListener<String>() {
+
+            @Override
+            public void changed(ObservableValue<? extends String> ov, String t, String t1) {
+                btn.setDisable(t1.isEmpty());
+            }
+        });
         HBox hbBtn = new HBox(10);
         hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
         hbBtn.getChildren().add(btn);
         grid.add(hbBtn, 1, 4);
-        
+
         final Text actiontarget = new Text();
         actiontarget.setText("Please sign in with your geocaching.com username and password.");
         actiontarget.setWrappingWidth(150);
         grid.add(actiontarget, 1, 6);
-        
+
         btn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -87,15 +98,20 @@ public class LoginStage extends Stage {
                     public void run() {
                         session = new GeoSession(userTextField.getText(), pwBox.getText());
                         Platform.runLater(new Runnable() {
-
                             @Override
                             public void run() {
-                                btn.setDisable(false);
-                                if (session.login()) {
-                                    actiontarget.setText("");
-                                    hide();
+                                if (pwBox.getText().isEmpty()) {
+                                    actiontarget.setText("Please enter a password.");
+                                    btn.setDisable(false);
+                                    pwBox.requestFocus();
                                 } else {
-                                    actiontarget.setText("Login failed.");
+                                    btn.setDisable(false);
+                                    if (session.login()) {
+                                        actiontarget.setText("");
+                                        hide();
+                                    } else {
+                                        actiontarget.setText("Login failed.");
+                                    }
                                 }
                             }
                         });
@@ -108,10 +124,9 @@ public class LoginStage extends Stage {
         Scene scene = new Scene(grid, 300, 275);
         setScene(scene);
     }
-    
+
     public GeoSession getSession() {
         showAndWait();
         return session;
     }
-    
 }
