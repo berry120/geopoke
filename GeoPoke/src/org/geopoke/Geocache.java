@@ -7,8 +7,6 @@ package org.geopoke;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 /**
  *
@@ -19,7 +17,8 @@ public class Geocache {
     private String gcNum;
     private String name;
     private Coords coords;
-    private String description;
+    private String shortDescription;
+    private String longDescription;
     private int difficulty;
     private int terrain;
     private String hint;
@@ -27,12 +26,13 @@ public class Geocache {
     private boolean logWarning;
     private CacheType type;
 
-    public Geocache(CacheType type, String gcNum, String name, Coords coords, String description, int difficulty, int terrain, String hint) {
+    public Geocache(CacheType type, String gcNum, String name, Coords coords, String shortDescription, String longDescription, int difficulty, int terrain, String hint) {
         this.type = type;
         this.gcNum = gcNum;
         this.name = name;
         this.coords = coords;
-        this.description = description;
+        this.shortDescription = shortDescription;
+        this.longDescription = longDescription;
         this.difficulty = difficulty;
         this.terrain = terrain;
         this.hint = hint;
@@ -71,8 +71,12 @@ public class Geocache {
         return coords;
     }
 
-    public String getDescription() {
-        return description;
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public String getLongDescription() {
+        return shortDescription;
     }
 
     public int getDifficulty() {

@@ -7,7 +7,6 @@ package org.geopoke;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;

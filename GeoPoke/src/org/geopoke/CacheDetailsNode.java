@@ -128,7 +128,7 @@ public class CacheDetailsNode extends BorderPane {
         addTag("name", cache.getName(), doc, cacheElem);
         addTag("coords", cache.getBestCoords(), doc, cacheElem);
         addTag("hint", cache.getHint(), doc, cacheElem);
-        addTag("description", cache.getDescription(), doc, cacheElem);
+        addTag("description", cache.getShortDescription(), doc, cacheElem);
         addTag("difficulty", Integer.toString(cache.getDifficulty()), doc, cacheElem);
         addTag("terrain", Integer.toString(cache.getTerrain()), doc, cacheElem);
         addTag("type", cache.getType().toString(), doc, cacheElem);

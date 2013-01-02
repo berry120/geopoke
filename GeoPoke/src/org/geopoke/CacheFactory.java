@@ -31,7 +31,8 @@ public class CacheFactory {
             List<TagNode> detailsNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "cacheDetails", true, true);
             List<TagNode> oldWarningNodes = (List<TagNode>) rootNode.getElementListByAttValue("class", "OldWarning", true, true);
             List<TagNode> nameNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "ctl00_ContentBody_CacheName", true, true);
-            List<TagNode> descriptionNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "ctl00_ContentBody_ShortDescription", true, true);
+            List<TagNode> shortDescriptionNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "ctl00_ContentBody_ShortDescription", true, true);
+            List<TagNode> longDescriptionNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "ctl00_ContentBody_LongDescription", true, true);
             List<TagNode> gcNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "ctl00_ContentBody_CoordInfoLinkControl1_uxCoordInfoCode", true, true);
             List<TagNode> hintNodes = (List<TagNode>) rootNode.getElementListByAttValue("id", "div_hint", true, true);
             CacheType type = getType(detailsNodes);
@@ -39,7 +40,8 @@ public class CacheFactory {
                 LOGGER.log(Level.WARNING, "Couldn't get cache type. Assuming traditional...");
                 type = CacheType.TRADITIONAL;
             }
-            String description = getDescription(descriptionNodes);
+            String shortDescription = getDescription(shortDescriptionNodes);
+            String longDescription = getDescription(longDescriptionNodes);
             String gc = getGC(gcNodes);
             String name = getName(nameNodes);
             String hint = getHint(hintNodes);
@@ -48,7 +50,7 @@ public class CacheFactory {
             int terrain = 0;
             boolean isWarning = !oldWarningNodes.isEmpty();
 
-            Geocache ret = new Geocache(type, gc, name, coords, description, difficulty, terrain, hint);
+            Geocache ret = new Geocache(type, gc, name, coords, shortDescription, longDescription, difficulty, terrain, hint);
             ret.setDisabledWarning(isWarning);
             ret.setLogWarning(!logsok);
             return ret;
