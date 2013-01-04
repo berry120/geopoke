@@ -16,10 +16,10 @@
  */
 package org.geopoke;
 
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -28,22 +28,21 @@ import javafx.stage.StageStyle;
  *
  * @author Michael
  */
-public class OpenProgressDialog extends Stage {
+public class ModalProgressDialog extends Stage {
     
     private ProgressBar progressBar;
     
-    public OpenProgressDialog() {
+    public ModalProgressDialog(String text) {
         initModality(Modality.APPLICATION_MODAL);
-        initStyle(StageStyle.UTILITY);
+        initStyle(StageStyle.UNDECORATED);
         setResizable(false);
-        setTitle("Opening...");
+        setTitle(text);
         
-        VBox root = new VBox();
-        root.setAlignment(Pos.CENTER);
+        BorderPane root = new BorderPane();
+        root.setTop(new Label(text));
         progressBar = new ProgressBar();
-        root.getChildren().addAll(progressBar);
+        root.setCenter(progressBar);
         setScene(new Scene(root));
-        setWidth(150);
     }
     
     public void setProgress(double progress) {

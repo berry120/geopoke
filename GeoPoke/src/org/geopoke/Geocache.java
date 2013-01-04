@@ -49,6 +49,9 @@ public class Geocache {
         this.terrain = terrain;
         this.hint = hint;
     }
+    
+    public Geocache(com.arcao.geocaching.api.data.Geocache apiCache) {
+    }
 
     public CacheType getType() {
         return type;

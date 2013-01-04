@@ -52,7 +52,7 @@ import name.antonsmirnov.javafx.dialog.Dialog;
  */
 public class Main extends Application {
 
-    private ScrapeSession session;
+    private GeoSession session;
     private StatusLabel statusLabel;
     private CacheList mainList;
     private WorldMap map;
@@ -61,7 +61,7 @@ public class Main extends Application {
 
     @Override
     public void start(final Stage primaryStage) {
-        session = new LoginStage().getSession();
+        session = new SessionFactory().newScrapeSession();
         if (session == null) { //Need a session to continue!
             Platform.exit();
         }
@@ -99,7 +99,7 @@ public class Main extends Application {
                 FileChooser chooser = new FileChooser();
                 chooser.getExtensionFilters().add(FileFilters.GEOPOKE_LIST);
                 final File f = chooser.showOpenDialog(primaryStage);
-                final OpenProgressDialog dialog = new OpenProgressDialog();
+                final ModalProgressDialog dialog = new ModalProgressDialog("Opening, please wait...");
                 dialog.show();
                 new ListSaver().getCaches(session, f, new ProgressUpdator() {
 

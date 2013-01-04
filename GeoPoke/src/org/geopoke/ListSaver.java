@@ -35,7 +35,7 @@ public class ListSaver {
 
     private static final Logger LOGGER = Logger.getLogger(ListSaver.class.getName());
 
-    public void getCaches(final ScrapeSession session, final File file,
+    public void getCaches(final GeoSession session, final File file,
             final ProgressUpdator updator, final Callback<Geocache[]> finished) {
         Thread t = new Thread() {
             public void run() {
