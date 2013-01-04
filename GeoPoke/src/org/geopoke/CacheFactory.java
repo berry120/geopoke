@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * This file is part of Geopoke.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.geopoke;
 
@@ -45,12 +57,10 @@ public class CacheFactory {
             String gc = getGC(gcNodes);
             String name = getName(nameNodes);
             String hint = getHint(hintNodes);
-            Coords coords = getCoords(pageContent);
-            int difficulty = 0;
-            int terrain = 0;
+            CacheCoords coords = getCoords(pageContent);
             boolean isWarning = !oldWarningNodes.isEmpty();
 
-            Geocache ret = new Geocache(type, gc, name, coords, shortDescription, longDescription, difficulty, terrain, hint);
+            Geocache ret = new Geocache(type, gc, name, coords, shortDescription, longDescription, null, null, hint);
             ret.setDisabledWarning(isWarning);
             ret.setLogWarning(!logsok);
             return ret;
@@ -60,7 +70,7 @@ public class CacheFactory {
         }
     }
 
-    private Coords getCoords(String pageContent) {
+    private CacheCoords getCoords(String pageContent) {
         for (String line : pageContent.split("\n")) {
             if (line.startsWith("var userDefinedCoords")) {
                 String initialCoords = getVal(line, "oldLatLngDisplay").get(0);
@@ -73,7 +83,7 @@ public class CacheFactory {
                     String lon = rawCoords.split(",")[1];
                     newCoords = getCoordAsString(Double.parseDouble(lat), Double.parseDouble(lon));
                 }
-                return new Coords(initialCoords, newCoords);
+                return new CacheCoords(initialCoords, newCoords);
             }
         }
         LOGGER.log(Level.WARNING, "No coords found.");

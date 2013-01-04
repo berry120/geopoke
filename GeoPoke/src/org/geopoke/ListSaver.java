@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * This file is part of Geopoke.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.geopoke;
 
@@ -23,8 +35,8 @@ public class ListSaver {
 
     private static final Logger LOGGER = Logger.getLogger(ListSaver.class.getName());
 
-    public void getCaches(final GeoSession session, final File file,
-            final ProgressUpdator updator, final OnFinishedOpening finished) {
+    public void getCaches(final ScrapeSession session, final File file,
+            final ProgressUpdator updator, final Callback finished) {
         Thread t = new Thread() {
             public void run() {
                 try {
@@ -47,7 +59,7 @@ public class ListSaver {
 
                         @Override
                         public void run() {
-                            finished.finished(caches.toArray(new Geocache[caches.size()]));
+                            finished.call(caches.toArray(new Geocache[caches.size()]));
                         }
                     });
                 } catch (IOException ex) {

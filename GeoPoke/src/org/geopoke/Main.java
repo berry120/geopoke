@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * This file is part of Geopoke.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.geopoke;
 
@@ -40,7 +52,7 @@ import name.antonsmirnov.javafx.dialog.Dialog;
  */
 public class Main extends Application {
 
-    private GeoSession session;
+    private ScrapeSession session;
     private StatusLabel statusLabel;
     private CacheList mainList;
     private WorldMap map;
@@ -95,10 +107,10 @@ public class Main extends Application {
                     public void update(double percentDone) {
                         dialog.setProgress(percentDone);
                     }
-                }, new OnFinishedOpening() {
+                }, new Callback<Geocache[]>() {
 
                     @Override
-                    public void finished(Geocache... caches) {
+                    public void call(Geocache[] caches) {
                         mainList.removeAllCaches();
                         mainList.addCache(caches);
                         currentFile = f;

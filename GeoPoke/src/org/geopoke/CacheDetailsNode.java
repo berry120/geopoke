@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * This file is part of Geopoke.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.geopoke;
 
@@ -130,8 +142,8 @@ public class CacheDetailsNode extends BorderPane {
         addTag("coords", cache.getBestCoords(), doc, cacheElem);
         addTag("hint", cache.getHint(), doc, cacheElem);
         addTag("description", cache.getShortDescription(), doc, cacheElem);
-        addTag("difficulty", Integer.toString(cache.getDifficulty()), doc, cacheElem);
-        addTag("terrain", Integer.toString(cache.getTerrain()), doc, cacheElem);
+        addTag("difficulty", cache.getDifficulty().toString(), doc, cacheElem);
+        addTag("terrain", cache.getTerrain().toString(), doc, cacheElem);
         addTag("type", cache.getType().toString(), doc, cacheElem);
         addTag("warning", getWarningString(), doc, cacheElem);
         if(qr) {

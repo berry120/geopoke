@@ -1,6 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * This file is part of Geopoke.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package org.geopoke;
 
@@ -16,17 +28,17 @@ public class Geocache {
 
     private String gcNum;
     private String name;
-    private Coords coords;
+    private CacheCoords coords;
     private String shortDescription;
     private String longDescription;
-    private int difficulty;
-    private int terrain;
+    private Difficulty difficulty;
+    private Difficulty terrain;
     private String hint;
     private boolean warning;
     private boolean logWarning;
     private CacheType type;
 
-    public Geocache(CacheType type, String gcNum, String name, Coords coords, String shortDescription, String longDescription, int difficulty, int terrain, String hint) {
+    public Geocache(CacheType type, String gcNum, String name, CacheCoords coords, String shortDescription, String longDescription, Difficulty difficulty, Difficulty terrain, String hint) {
         this.type = type;
         this.gcNum = gcNum;
         this.name = name;
@@ -46,17 +58,17 @@ public class Geocache {
         if (type.hasInitialAccurateCoords()) {
             return true;
         }
-        return coords.getNewCoords() != null;
+        return coords.getCorrectedCoords() != null;
     }
 
     public String getBestCoords() {
         if(coords==null) {
             return null;
         }
-        if (coords.getNewCoords() == null) {
-            return coords.getOldCoords();
+        if (coords.getCorrectedCoords() == null) {
+            return coords.getInitialCoords();
         }
-        return coords.getNewCoords();
+        return coords.getCorrectedCoords();
     }
 
     public String getGcNum() {
@@ -67,7 +79,7 @@ public class Geocache {
         return name;
     }
 
-    public Coords getCoords() {
+    public CacheCoords getCoords() {
         return coords;
     }
 
@@ -76,14 +88,14 @@ public class Geocache {
     }
 
     public String getLongDescription() {
-        return shortDescription;
+        return longDescription;
     }
 
-    public int getDifficulty() {
+    public Difficulty getDifficulty() {
         return difficulty;
     }
 
-    public int getTerrain() {
+    public Difficulty getTerrain() {
         return terrain;
     }
 
