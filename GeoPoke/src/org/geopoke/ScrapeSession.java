@@ -30,9 +30,6 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.client.params.CookiePolicy;
-import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
@@ -69,32 +66,22 @@ public class ScrapeSession implements GeoSession {
         return getCacheFromURL("http://www.geocaching.com/seek/cache_details.aspx?wp=" + gcCode);
     }
 
+    @Override
     public Geocache getCacheFromURL(String url) {
         try {
             HttpGet httpGet = new HttpGet(url);
             HttpResponse response = client.execute(httpGet);
             return new CacheFactory().cacheFromPage(inputStreamToString(response.getEntity().getContent()));
         }
-        catch(Exception ex) {
+        catch(IOException | IllegalStateException ex) {
             LOGGER.log(Level.WARNING, "Exception getting page", ex);
             return null;
         }
     }
 
+    @Override
     public boolean login() {
         String strURL = "https://www.geocaching.com/login/default.aspx";
-        client.getParams().setParameter(ClientPNames.COOKIE_POLICY, CookiePolicy.RFC_2109);
-        HttpGet httpget = new HttpGet(strURL);
-        try {
-            HttpResponse response = client.execute(httpget);
-            inputStreamToString(response.getEntity().getContent());
-        }
-        catch(IOException ex) {
-            LOGGER.log(Level.SEVERE, "Error logging in", ex);
-            return false;
-        }
-        List<Cookie> cookies = client.getCookieStore().getCookies();
-        httpget.releaseConnection();
 
         HttpPost postMethod = new HttpPost("https://www.geocaching.com/login/default.aspx");
         List<NameValuePair> postData = new ArrayList<>();
@@ -115,10 +102,6 @@ public class ScrapeSession implements GeoSession {
         }
         postMethod.addHeader(new BasicHeader("Referer", strURL));
         postMethod.addHeader(new BasicHeader("Origin", "https://www.geocaching.com"));
-
-        for(Cookie cookie : cookies) {
-            client.getCookieStore().addCookie(cookie);
-        }
         int responseCode;
         try {
             responseCode = client.execute(postMethod).getStatusLine().getStatusCode();
