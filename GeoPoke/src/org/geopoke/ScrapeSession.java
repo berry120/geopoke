@@ -81,8 +81,6 @@ public class ScrapeSession implements GeoSession {
 
     @Override
     public boolean login() {
-        String strURL = "https://www.geocaching.com/login/default.aspx";
-
         HttpPost postMethod = new HttpPost("https://www.geocaching.com/login/default.aspx");
         List<NameValuePair> postData = new ArrayList<>();
         postData.add(new BasicNameValuePair("RESETCOMPLETE", "Y"));
@@ -100,7 +98,6 @@ public class ScrapeSession implements GeoSession {
         catch(UnsupportedEncodingException ex) {
             LOGGER.log(Level.SEVERE, "Unsupported encoding", ex);
         }
-        postMethod.addHeader(new BasicHeader("Referer", strURL));
         postMethod.addHeader(new BasicHeader("Origin", "https://www.geocaching.com"));
         int responseCode;
         try {
