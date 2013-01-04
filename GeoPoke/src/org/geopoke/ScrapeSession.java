@@ -104,6 +104,7 @@ public class ScrapeSession implements GeoSession {
             responseCode = client.execute(postMethod).getStatusLine().getStatusCode();
         }
         catch(IOException ex) {
+            LOGGER.log(Level.WARNING, "Couldn't get response code", ex);
             return false;
         }
         postMethod.releaseConnection();
