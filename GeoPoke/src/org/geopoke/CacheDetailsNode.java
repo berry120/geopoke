@@ -134,6 +134,14 @@ public class CacheDetailsNode extends BorderPane {
     }
 
     public void addToXML(Document doc, Element root, boolean qr) {
+        String difficulty = "";
+        if(cache.getDifficulty()!=null) {
+            difficulty = cache.getDifficulty().toString();
+        }
+        String terrain = "";
+        if(cache.getTerrain()!=null) {
+            terrain = cache.getTerrain().toString();
+        }
         Element cacheElem = doc.createElement("cache");
         root.appendChild(cacheElem);
         addTag("GC", cache.getGcNum(), doc, cacheElem);
@@ -142,8 +150,8 @@ public class CacheDetailsNode extends BorderPane {
         addTag("coords", cache.getBestCoords(), doc, cacheElem);
         addTag("hint", cache.getHint(), doc, cacheElem);
         addTag("description", cache.getShortDescription(), doc, cacheElem);
-        addTag("difficulty", cache.getDifficulty().toString(), doc, cacheElem);
-        addTag("terrain", cache.getTerrain().toString(), doc, cacheElem);
+        addTag("difficulty", difficulty, doc, cacheElem);
+        addTag("terrain", terrain, doc, cacheElem);
         addTag("type", cache.getType().toString(), doc, cacheElem);
         addTag("warning", getWarningString(), doc, cacheElem);
         if(qr) {
