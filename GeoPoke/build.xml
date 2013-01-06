@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="GeoPrinter" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
-    <description>Builds, tests, and runs the project GeoPrinter.</description>
+<project name="Geopoke" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <description>Builds Geopoke.</description>
     <import file="nbproject/build-impl.xml"/>
     
     <target name="-post-compile">
