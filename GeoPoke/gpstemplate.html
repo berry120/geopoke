@@ -6,15 +6,15 @@
         <script type="text/javascript">
             function load() {
                 new Garmin.DeviceDisplay("garminDisplay", {
-                    unlockOnPageLoad: false,                       //delays unlocking to avoid authorization prompt until action
+                    unlockOnPageLoad: false,
                     hideIfBrowserNotSupported: true,                              
-                    showStatusElement: true,                       //provide minimal feedback
-                    autoFindDevices: true,                        //it will search for devices upon action                      
-                    findDevicesButtonText: "Upload",      //allows you to customize the action text
-                    showCancelFindDevicesButton: false,            //no need to cancel small data transfers
-                    autoSelectFirstDevice: true,                   //pick the first device if several are found
-                    autoReadData: false,                           //don't automatically read the tracks/etc
-                    autoWriteData: true,                           //automatically write the data once devices found
+                    showStatusElement: true,
+                    autoFindDevices: true,
+                    findDevicesButtonText: "Upload",
+                    showCancelFindDevicesButton: false,
+                    autoSelectFirstDevice: true,
+                    autoReadData: false,
+                    autoWriteData: true,
                     showReadDataElement: false,  
 								  
                     getWriteData: function() {
