@@ -20,22 +20,9 @@ package org.geopoke;
  *
  * @author Michael
  */
-public class CacheCoords {
+public class GPSTest {
     
-    private Coord initialCoords;
-    private Coord correctedCoords;
-
-    public CacheCoords(Coord initialCoords, Coord correctedCoords) {
-        this.initialCoords = initialCoords;
-        this.correctedCoords = correctedCoords;
-    }
-
-    public Coord getInitialCoords() {
-        return initialCoords;
-    }
-
-    public Coord getCorrectedCoords() {
-        return correctedCoords;
+    public static void main(String[] args) {
     }
     
 }

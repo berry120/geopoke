@@ -83,7 +83,7 @@ public class CacheFactory {
                     String lon = rawCoords.split(",")[1];
                     newCoords = getCoordAsString(Double.parseDouble(lat), Double.parseDouble(lon));
                 }
-                return new CacheCoords(initialCoords, newCoords);
+                return new CacheCoords(Coord.newFromDegreesMinutes(initialCoords), Coord.newFromDegreesMinutes(newCoords));
             }
         }
         LOGGER.log(Level.WARNING, "No coords found.");

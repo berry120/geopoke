@@ -64,7 +64,7 @@ public class Geocache {
         return coords.getCorrectedCoords() != null;
     }
 
-    public String getBestCoords() {
+    public Coord getBestCoords() {
         if(coords==null) {
             return null;
         }

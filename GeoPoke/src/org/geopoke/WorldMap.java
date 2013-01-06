@@ -98,7 +98,7 @@ public class WorldMap extends BorderPane {
     }
 
     private void updateMarker(CacheDetailsNode node) {
-        String coords = node.getCache().getBestCoords();
+        String coords = node.getCache().getBestCoords().toDegreesMinutes();
         File labelImage = new LabelImageGenerator().generateLabelImage(node.getLabel());
         String northDegrees = coords.substring(0, coords.indexOf('°'));
         boolean north = northDegrees.charAt(0) == 'N';

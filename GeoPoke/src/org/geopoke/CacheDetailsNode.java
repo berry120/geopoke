@@ -65,7 +65,7 @@ public class CacheDetailsNode extends BorderPane {
             name.setStyle(name.getStyle() + " -fx-text-fill: orange;");
             Tooltip.install(this, new Tooltip("The last few logs for this cache have been DNF's."));
         }
-        Text coords = new Text(cache.getBestCoords());
+        Text coords = new Text(cache.getBestCoords().toDegreesMinutes());
         if (!cache.hasAccurateCoords()) {
             coords.setFill(Color.RED);
             Tooltip.install(coords, new Tooltip("These co-ordinates are probably not accurate.\nThey may represent a starting point, but you will need to solve the puzzle behind the cache first!"));
@@ -147,7 +147,7 @@ public class CacheDetailsNode extends BorderPane {
         addTag("GC", cache.getGcNum(), doc, cacheElem);
         addTag("label", label.getText(), doc, cacheElem);
         addTag("name", cache.getName(), doc, cacheElem);
-        addTag("coords", cache.getBestCoords(), doc, cacheElem);
+        addTag("coords", cache.getBestCoords().toDegreesMinutes(), doc, cacheElem);
         addTag("hint", cache.getHint(), doc, cacheElem);
         addTag("description", cache.getShortDescription(), doc, cacheElem);
         addTag("difficulty", difficulty, doc, cacheElem);
