@@ -57,6 +57,7 @@ public class Main extends Application {
     private CacheList mainList;
     private WorldMap map;
     private Button pdfButton;
+    private Button gpsButton;
     private File currentFile;
 
     @Override
@@ -208,28 +209,40 @@ public class Main extends Application {
                 }
             }
         });
+        gpsButton = new Button("", new ImageView(new Image("file:img/gps.png")));
+        Tooltip.install(gpsButton, new Tooltip("Send to GPS"));
+        gpsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent t) {
+                new GPSSender().send(mainList.getCacheNodes());
+            }
+        });
         mainList = new CacheList(map);
         mainList.addSizeListener(new SizeListener() {
             @Override
             public void sizeChanged(int oldSize, int newSize) {
                 if (newSize == 0) {
                     pdfButton.setDisable(true);
+                    gpsButton.setDisable(true);
                     saveButton.setDisable(true);
                 } else {
                     pdfButton.setDisable(false);
+                    gpsButton.setDisable(false);
                     saveButton.setDisable(false);
                 }
             }
         });
         pdfButton.setDisable(true);
+        gpsButton.setDisable(true);
         ScrollPane mainScroll = new ScrollPane();
         mainScroll.setContent(mainList);
         mainScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         mainScroll.setFitToWidth(true);
         StackPane mainStack = new StackPane();
         StackPane.setMargin(pdfButton, new Insets(15));
+        StackPane.setMargin(gpsButton, new Insets(0, 90, 15, 0));
         mainStack.setAlignment(Pos.BOTTOM_RIGHT);
-        mainStack.getChildren().addAll(mainScroll, pdfButton);
+        mainStack.getChildren().addAll(mainScroll, pdfButton, gpsButton);
         VBox leftContent = new VBox();
         VBox.setVgrow(mainStack, Priority.ALWAYS);
         leftContent.getChildren().addAll(toolbar, mainStack, gcBar);

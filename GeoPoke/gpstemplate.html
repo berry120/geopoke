@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+        <title>Geopoke - Uploading co-ordinates</title>
+        <script type="text/javascript" src="http://developer.garmin.com/web/communicator-api/prototype/prototype.js"></script>
+        <script type="text/javascript" src="http://developer.garmin.com/web/communicator-api/garmin/device/GarminDeviceDisplay.js"></script>
+        <script type="text/javascript">
+            function load() {
+                new Garmin.DeviceDisplay("garminDisplay", {
+                    unlockOnPageLoad: false,                       //delays unlocking to avoid authorization prompt until action
+                    hideIfBrowserNotSupported: true,                              
+                    showStatusElement: true,                       //provide minimal feedback
+                    autoFindDevices: true,                        //it will search for devices upon action                      
+                    findDevicesButtonText: "Upload",      //allows you to customize the action text
+                    showCancelFindDevicesButton: false,            //no need to cancel small data transfers
+                    autoSelectFirstDevice: true,                   //pick the first device if several are found
+                    autoReadData: false,                           //don't automatically read the tracks/etc
+                    autoWriteData: true,                           //automatically write the data once devices found
+                    showReadDataElement: false,  
+								  
+                    getWriteData: function() {
+				
+                        var arr = new Array();
+                        
+                        <!--PLACEHOLDER-->
+				
+                        var factory = new Garmin.GpsDataFactory();
+                        var gpx = factory.produceGpxString(null, arr);
+                        return gpx;
+                    },
+                    afterFinishWriteToDevice: function() {
+                        close();
+                    }
+                });
+            }
+        </script>
+    </head>
+    <body onload="load()">
+        <h2>Geopoke - Uploading co-ordinates</h2>
+        <div id="garminDisplay"></div>
+    </body>
+</html>
