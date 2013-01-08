@@ -51,6 +51,7 @@ public class LoginStage extends Stage {
         initModality(Modality.APPLICATION_MODAL);
         getIcons().add(new Image("file:img/logo.png"));
         setTitle("Login");
+        setResizable(false);
         GridPane grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(10);
