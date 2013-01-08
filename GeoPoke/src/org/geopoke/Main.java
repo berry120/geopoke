@@ -63,10 +63,10 @@ public class Main extends Application {
     @Override
     public void start(final Stage primaryStage) {
         session = new SessionFactory().newScrapeSession();
-        if (session == null) { //Need a session to continue!
+        if(session == null) { //Need a session to continue!
             Platform.exit();
         }
-        
+
         primaryStage.getIcons().add(new Image("file:img/logo.png"));
         primaryStage.setTitle("Geopoke");
 
@@ -111,13 +111,13 @@ public class Main extends Application {
             public void handle(ActionEvent t) {
                 FileChooser chooser = new FileChooser();
                 chooser.getExtensionFilters().add(FileFilters.GEOPOKE_LIST);
-                if (currentFile == null) {
+                if(currentFile == null) {
                     currentFile = chooser.showSaveDialog(primaryStage);
-                    if(!currentFile.getName().endsWith(".geopl")) {
-                        currentFile = new File(currentFile.getAbsolutePath()+".geopl");
+                    if(currentFile != null && !currentFile.getName().endsWith(".geopl")) {
+                        currentFile = new File(currentFile.getAbsolutePath() + ".geopl");
                     }
                 }
-                if (currentFile != null) {
+                if(currentFile != null) {
                     new ListSaver().saveCaches(mainList.getCaches(), currentFile);
                 }
             }
@@ -135,9 +135,10 @@ public class Main extends Application {
         gcField.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> ov, String t, String t1) {
-                if (t1.isEmpty()) {
+                if(t1.isEmpty()) {
                     gcButton.setDisable(true);
-                } else {
+                }
+                else {
                     gcButton.setDisable(false);
                 }
             }
@@ -160,10 +161,11 @@ public class Main extends Application {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                if (cache == null || cache.getBestCoords() == null) {
+                                if(cache == null || cache.getBestCoords() == null) {
                                     Dialog.showError("Error retrieving Geocache",
                                             "Did you definitely specify a valid GC number or URL?");
-                                } else {
+                                }
+                                else {
                                     mainList.addCache(cache);
                                 }
                                 gcField.clear();
@@ -188,7 +190,8 @@ public class Main extends Application {
                 File file = new ReportGenerator().generateReport(mainList.getCacheNodes(), map.getSnapshot(), null);
                 try {
                     Desktop.getDesktop().open(file);
-                } catch (IOException ex) {
+                }
+                catch(IOException ex) {
                     Dialog.showError("Error opening PDF", "Sorry, couldn't open the generated file.");
                 }
             }
@@ -205,11 +208,12 @@ public class Main extends Application {
         mainList.addSizeListener(new SizeListener() {
             @Override
             public void sizeChanged(int oldSize, int newSize) {
-                if (newSize == 0) {
+                if(newSize == 0) {
                     pdfButton.setDisable(true);
                     gpsButton.setDisable(true);
                     saveButton.setDisable(true);
-                } else {
+                }
+                else {
                     pdfButton.setDisable(false);
                     gpsButton.setDisable(false);
                     saveButton.setDisable(false);
@@ -242,17 +246,21 @@ public class Main extends Application {
         primaryStage.setWidth(800);
         primaryStage.setHeight(600);
         primaryStage.show();
-        
-        if(getParameters().getUnnamed().size()==1) {
+
+        if(getParameters().getUnnamed().size() == 1) {
             openFile(new File(getParameters().getUnnamed().get(0)));
         }
     }
-    
+
     /**
      * Open a file in the main window.
+     * <p/>
      * @param file the file to open.
      */
     private void openFile(final File file) {
+        if(file == null) {
+            return;
+        }
         final ModalProgressDialog dialog = new ModalProgressDialog("Opening, please wait...");
         dialog.show();
         new ListSaver().getCaches(session, file, new ProgressUpdator() {
@@ -275,7 +283,7 @@ public class Main extends Application {
      * main() serves only as fallback in case the application can not be
      * launched through deployment artifacts, e.g., in IDEs with limited FX
      * support. NetBeans ignores main().
-     *
+     * <p/>
      * @param args the command line arguments
      */
     public static void main(String[] args) {
