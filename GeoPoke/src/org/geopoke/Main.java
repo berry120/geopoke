@@ -66,7 +66,7 @@ public class Main extends Application {
         if (session == null) { //Need a session to continue!
             Platform.exit();
         }
-
+        
         primaryStage.getIcons().add(new Image("file:img/logo.png"));
         primaryStage.setTitle("Geopoke");
 
@@ -100,23 +100,7 @@ public class Main extends Application {
                 FileChooser chooser = new FileChooser();
                 chooser.getExtensionFilters().add(FileFilters.GEOPOKE_LIST);
                 final File f = chooser.showOpenDialog(primaryStage);
-                final ModalProgressDialog dialog = new ModalProgressDialog("Opening, please wait...");
-                dialog.show();
-                new ListSaver().getCaches(session, f, new ProgressUpdator() {
-
-                    @Override
-                    public void update(double percentDone) {
-                        dialog.setProgress(percentDone);
-                    }
-                }, new Callback<Geocache[]>() {
-
-                    @Override
-                    public void call(Geocache[] caches) {
-                        mainList.removeAllCaches();
-                        mainList.addCache(caches);
-                        currentFile = f;
-                    }
-                });
+                openFile(f);
             }
         });
         final Button saveButton = new Button("", new ImageView(new Image("file:img/save.png")));
@@ -259,6 +243,32 @@ public class Main extends Application {
         primaryStage.setWidth(800);
         primaryStage.setHeight(600);
         primaryStage.show();
+        
+        if(getParameters().getUnnamed().size()==1) {
+            openFile(new File(getParameters().getUnnamed().get(0)));
+        }
+    }
+    
+    /**
+     * Open a file in the main window.
+     * @param file the file to open.
+     */
+    private void openFile(final File file) {
+        final ModalProgressDialog dialog = new ModalProgressDialog("Opening, please wait...");
+        dialog.show();
+        new ListSaver().getCaches(session, file, new ProgressUpdator() {
+            @Override
+            public void update(double percentDone) {
+                dialog.setProgress(percentDone);
+            }
+        }, new Callback<Geocache[]>() {
+            @Override
+            public void call(Geocache[] caches) {
+                mainList.removeAllCaches();
+                mainList.addCache(caches);
+                currentFile = file;
+            }
+        });
     }
 
     /**
