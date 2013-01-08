@@ -229,14 +229,13 @@ public class Main extends Application {
         mainStack.getChildren().addAll(mainScroll, pdfButton, gpsButton);
         VBox leftContent = new VBox();
         VBox.setVgrow(mainStack, Priority.ALWAYS);
-        leftContent.getChildren().addAll(toolbar, mainStack, gcBar);
+        statusLabel = new StatusLabel();
+        leftContent.getChildren().addAll(toolbar, mainStack, gcBar, statusLabel);
 
         SplitPane pane = new SplitPane();
         pane.getItems().addAll(leftContent, map);
 
         root.setCenter(pane);
-        statusLabel = new StatusLabel();
-        root.setBottom(statusLabel);
 
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
