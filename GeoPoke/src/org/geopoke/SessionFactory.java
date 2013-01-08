@@ -7,7 +7,7 @@ package org.geopoke;
 public class SessionFactory {
     
     public GeoSession newAPISession() {
-        throw new UnsupportedOperationException("Not yet implemented.");
+        return new APISession();
     }
     
     public GeoSession newScrapeSession() { 
