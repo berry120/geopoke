@@ -38,12 +38,12 @@ public class Coord {
         }
         String[] parts = coord.split(" ");
         boolean isNorth = parts[0].equalsIgnoreCase("N");
-        String northDegreesStr = removeLastCharIfNotDigit(parts[1]);
-        String northMinutesStr = removeLastCharIfNotDigit(parts[2]);
+        String northDegreesStr = removeLastCharsIfNotDigit(parts[1]);
+        String northMinutesStr = removeLastCharsIfNotDigit(parts[2]);
 
         boolean isEast = parts[3].equalsIgnoreCase("E");
-        String eastDegreesStr = removeLastCharIfNotDigit(parts[4]);
-        String eastMinutesStr = removeLastCharIfNotDigit(parts[5]);
+        String eastDegreesStr = removeLastCharsIfNotDigit(parts[4]);
+        String eastMinutesStr = removeLastCharsIfNotDigit(parts[5]);
 
 
         try {
@@ -69,12 +69,11 @@ public class Coord {
         }
     }
 
-    private static String removeLastCharIfNotDigit(String input) {
-        String result = input;
-        if(!Character.isDigit(input.charAt(input.length() - 1))) {
-            result = input.substring(0, input.length() - 1);
+    private static String removeLastCharsIfNotDigit(String input) {
+        while(!Character.isDigit(input.charAt(input.length() - 1))) {
+            input = input.substring(0, input.length() - 1);
         }
-        return result;
+        return input;
     }
 
     private static double toDegrees(int degrees, double minutes) {
