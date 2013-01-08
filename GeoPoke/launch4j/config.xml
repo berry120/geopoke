@@ -1,0 +1,39 @@
+
+<launch4jConfig>
+    <headerType>gui</headerType>
+    <jar>..\dist\Geopoke.jar</jar>
+    <outfile>..\dist\Geopoke.exe</outfile>
+    <chdir>.</chdir>
+    <errTitle>Error</errTitle>
+    <priority>normal</priority>
+    <downloadUrl>http://code.google.com/p/geopoke/</downloadUrl>
+    <supportUrl>http://code.google.com/p/geopoke/</supportUrl>
+    <customProcName>false</customProcName>
+    <stayAlive>false</stayAlive>
+    <manifest></manifest>
+    <icon>../img/logo.ico</icon>
+    <jre>
+        <minVersion>1.7.0</minVersion>
+        <jdkPreference>preferJre</jdkPreference>
+        <initialHeapSize>256</initialHeapSize>
+        <maxHeapSize>256</maxHeapSize>
+    </jre>
+    <messages>
+        <startupErr>Sorry, there was an error starting the program.</startupErr>
+        <bundledJreErr>Sorry, there was an error with the bundled JRE.</bundledJreErr>
+        <jreVersionErr>You're running a version of Java that's too old - you need at least version 7.</jreVersionErr>
+        <launcherErr>Sorry, there was an error launching Geopoke.</launcherErr>
+    </messages>
+    <versionInfo>
+        <fileVersion>1.0.0.0</fileVersion> <!-- Must be format x.x.x.x otherwise launch4j complains -->
+        <productVersion>1.0.0.0</productVersion> <!-- Must be format x.x.x.x otherwise launch4j complains -->
+        <txtProductVersion>1.0</txtProductVersion>
+        <txtFileVersion>1.0</txtFileVersion>
+        <productName>Geopoke</productName>
+        <copyright>GPLv3</copyright>
+        <originalFilename>Geopoke.exe</originalFilename>
+        <companyName>Michael Berry</companyName>
+        <fileDescription>Geopoke executable</fileDescription>
+        <internalName>Geopoke</internalName>
+    </versionInfo>
+</launch4jConfig>

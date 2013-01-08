@@ -2,14 +2,30 @@
 <project name="Geopoke" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
     <description>Builds Geopoke.</description>
     <import file="nbproject/build-impl.xml"/>
+    <property name="geopoke.version" value="1.0"/>
+    <taskdef name="launch4j" classpath="launch4j/launch4j.jar" classname="net.sf.launch4j.ant.Launch4jTask"/>
+    <property name="WindowsInstallerName" value="geopoke-${geopoke.version}-windows-install.exe"/>
+    <property name="WindowsInstaller" value="dist/standalone/${WindowsInstallerName}"/>
     
     <target name="-post-compile">
         <copy file="bubble.png" todir="dist"/>
         <copy file="style.xslt" todir="dist"/>
         <copy file="gpstemplate.html" todir="dist"/>
         <copy file="googlemap.html" todir="dist"/>
+        <copy file="${basedir}/build-install.bat" todir="dist"/>
         <copy todir="dist/img">
             <fileset dir="img"/>
         </copy>
+    </target>
+        
+    <target name="-post-jfx-deploy">
+        <launch4j configFile="launch4j/config.xml" /> 
+        <echo message="Generating windows installer using inno setup."/>
+        <echo message="For this to work inno setup needs to be installed and the appropriate paths set in build-install.bat. This will only work on Windows."/>
+        <exec dir="." executable="cmd" failifexecutionfails="false" failonerror="false">
+            <arg value="/c build-install.bat"/>
+        </exec>
+        <move file="${dist.jar.dir}/../Output/Geopoke.exe" tofile="${WindowsInstaller}" failonerror="false"/>
+        <delete dir="${dist.jar.dir}/../Output" verbose="true" failonerror="false"/>
     </target>
 </project>
