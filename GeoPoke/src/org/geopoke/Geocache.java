@@ -16,9 +16,11 @@
  */
 package org.geopoke;
 
+import com.arcao.geocaching.api.data.UserWaypoint;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
+import org.jsoup.Jsoup;
 
 /**
  *
@@ -49,8 +51,69 @@ public class Geocache {
         this.terrain = terrain;
         this.hint = hint;
     }
-    
+
     public Geocache(com.arcao.geocaching.api.data.Geocache apiCache) {
+        this.hint = apiCache.getHint();
+        this.terrain = Difficulty.fromDouble(apiCache.getTerrainRating());
+        this.difficulty = Difficulty.fromDouble(apiCache.getDifficultyRating());
+        this.shortDescription = Jsoup.parse(apiCache.getShortDescription()).text();
+        this.longDescription = Jsoup.parse(apiCache.getLongDescription()).text();
+        this.gcNum = apiCache.getCacheCode();
+        this.name = apiCache.getName();
+        Coord initialCoord = new Coord(apiCache.getLatitude(), apiCache.getLongitude());
+        Coord userCoord = null;
+        for(UserWaypoint waypoint : apiCache.getUserWaypoints()) {
+            if(waypoint.getDescription().equalsIgnoreCase("Coordinate Override")) {
+                userCoord = new Coord(waypoint.getLatitude(), waypoint.getLongitude());
+            }
+        }
+        this.coords = new CacheCoords(initialCoord, userCoord);
+        switch(apiCache.getCacheType()) {
+            case Traditional:
+                this.type = CacheType.TRADITIONAL;
+                break;
+            case Multi:
+                this.type = CacheType.MULTI;
+                break;
+            case Unknown:
+                this.type = CacheType.MYSTERY;
+                break;
+            case Virtual:
+                this.type = CacheType.VIRTUAL;
+                break;
+            case Earth:
+                this.type = CacheType.EARTH;
+                break;
+            case ProjectApe:
+                this.type = CacheType.APE;
+                break;
+            case LetterboxHybrid:
+                this.type = CacheType.HYBRID;
+                break;
+            case Wherigo:
+                this.type = CacheType.WHERIGO;
+                break;
+            case Event:
+                this.type = CacheType.EVENT;
+                break;
+            case MegaEvent:
+                this.type = CacheType.MEGAEVENT;
+                break;
+            case CacheInTrashOutEvent:
+                this.type = CacheType.CITO;
+                break;
+            case GroudspeakHQ:
+                this.type = CacheType.HQ;
+                break;
+            case Locationless:
+                this.type = CacheType.REVERSE;
+                break;
+            case Webcam:
+                this.type = CacheType.WEBCAM;
+                break;
+            default:
+                this.type = CacheType.TRADITIONAL;
+        }
     }
 
     public CacheType getType() {
@@ -58,17 +121,17 @@ public class Geocache {
     }
 
     public boolean hasAccurateCoords() {
-        if (type.hasInitialAccurateCoords()) {
+        if(type.hasInitialAccurateCoords()) {
             return true;
         }
         return coords.getCorrectedCoords() != null;
     }
 
     public Coord getBestCoords() {
-        if(coords==null) {
+        if(coords == null) {
             return null;
         }
-        if (coords.getCorrectedCoords() == null) {
+        if(coords.getCorrectedCoords() == null) {
             return coords.getInitialCoords();
         }
         return coords.getCorrectedCoords();
@@ -125,7 +188,8 @@ public class Geocache {
     public URL getURL() {
         try {
             return new URL("http://coord.info/" + gcNum);
-        } catch (MalformedURLException ex) {
+        }
+        catch(MalformedURLException ex) {
             return null;
         }
     }
@@ -139,14 +203,14 @@ public class Geocache {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if(obj == null) {
             return false;
         }
-        if (getClass() != obj.getClass()) {
+        if(getClass() != obj.getClass()) {
             return false;
         }
         final Geocache other = (Geocache) obj;
-        if (!Objects.equals(this.gcNum, other.gcNum)) {
+        if(!Objects.equals(this.gcNum, other.gcNum)) {
             return false;
         }
         return true;

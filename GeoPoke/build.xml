@@ -7,7 +7,7 @@
     <property name="WindowsInstallerName" value="geopoke-${geopoke.version}-windows-install.exe"/>
     <property name="WindowsInstaller" value="dist/standalone/${WindowsInstallerName}"/>
     
-    <target name="-post-compile">
+<!--    <target name="-post-compile">
         <copy file="bubble.png" todir="dist"/>
         <copy file="style.xslt" todir="dist"/>
         <copy file="gpstemplate.html" todir="dist"/>
@@ -27,5 +27,5 @@
         </exec>
         <move file="${dist.jar.dir}/../Output/Geopoke.exe" tofile="${WindowsInstaller}" failonerror="false"/>
         <delete dir="${dist.jar.dir}/../Output" verbose="true" failonerror="false"/>
-    </target>
+    </target>-->
 </project>

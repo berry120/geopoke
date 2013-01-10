@@ -47,14 +47,15 @@ public class WorldMap extends BorderPane {
         webview = new WebView();
         try {
             webview.getEngine().load(new File("googlemap.html").toURI().toURL().toString());
-        } catch (MalformedURLException ex) {
+        }
+        catch(MalformedURLException ex) {
             ex.printStackTrace();
         }
         setCenter(webview);
         webview.getEngine().getLoadWorker().stateProperty().addListener(new ChangeListener<Worker.State>() {
             @Override
             public void changed(ObservableValue ov, Worker.State t, Worker.State t1) {
-                if (t1.equals(Worker.State.SUCCEEDED)) {
+                if(t1.equals(Worker.State.SUCCEEDED)) {
                     ready = true;
                 }
             }
@@ -63,6 +64,7 @@ public class WorldMap extends BorderPane {
 
     /**
      * Get a snapshot of the current map as an image.
+     * <p/>
      * @return the current snapshot of the map.
      */
     public BufferedImage getSnapshot() {
@@ -76,7 +78,8 @@ public class WorldMap extends BorderPane {
             Robot robot = new Robot();
             BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(x, y, w, h));
             return image;
-        } catch (AWTException ex) {
+        }
+        catch(AWTException ex) {
             return null;
         }
     }
@@ -116,11 +119,11 @@ public class WorldMap extends BorderPane {
         double eastMinuteNum = Double.parseDouble(eastMinutes);
 
         double lat = northDegreeNum + (northMinuteNum / 60);
-        if (!north) {
+        if(!north) {
             lat *= -1;
         }
         double lon = eastDegreeNum + (eastMinuteNum / 60);
-        if (!east) {
+        if(!east) {
             lon *= -1;
         }
         webview.getEngine().executeScript("document.addMarker(" + lat + "," + lon + ",\"" + labelImage.toURI().toString() + "\",\"" + node.getLabel() + "\")");
@@ -132,7 +135,7 @@ public class WorldMap extends BorderPane {
         webview.getEngine().executeScript("document.removeMarker(\"" + node.getLabel() + "\")");
         markers.remove(node);
     }
-    
+
     public void removeAllMarkers() {
         webview.getEngine().executeScript("document.removeAllMarkers()");
         markers.clear();

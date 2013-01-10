@@ -59,12 +59,13 @@ public class Main extends Application {
     private Button pdfButton;
     private Button gpsButton;
     private File currentFile;
+    private ImageView liveLogo;
 
     @Override
     public void start(final Stage primaryStage) {
-        session = new SessionFactory().newScrapeSession();
+        session = new SessionFactory().newAPISession();
         if(session == null) { //Need a session to continue!
-            Platform.exit();
+            System.exit(1);
         }
 
         primaryStage.getIcons().add(new Image("file:img/logo.png"));
@@ -127,7 +128,7 @@ public class Main extends Application {
         map = new WorldMap();
 
         HBox gcBar = new HBox();
-        Label gcLabel = new Label("GC / URL:");
+        Label gcLabel = new Label("GC:");
         final Button gcButton = new Button("", new ImageView(new Image("file:img/add.png")));
         gcButton.setDisable(true);
         Tooltip.install(gcButton, new Tooltip("Add the geocache to the list"));
@@ -163,7 +164,7 @@ public class Main extends Application {
                             public void run() {
                                 if(cache == null || cache.getBestCoords() == null) {
                                     Dialog.showError("Error retrieving Geocache",
-                                            "Did you definitely specify a valid GC number or URL?");
+                                            "Did you definitely specify a valid GC number?");
                                 }
                                 else {
                                     mainList.addCache(cache);
@@ -187,7 +188,9 @@ public class Main extends Application {
         pdfButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent t) {
+                liveLogo.setVisible(false);
                 File file = new ReportGenerator().generateReport(mainList.getCacheNodes(), map.getSnapshot(), null);
+                liveLogo.setVisible(true);
                 try {
                     Desktop.getDesktop().open(file);
                 }
@@ -236,8 +239,15 @@ public class Main extends Application {
         statusLabel = new StatusLabel();
         leftContent.getChildren().addAll(toolbar, mainStack, gcBar, statusLabel);
 
+        liveLogo = new ImageView(new Image("file:img/geocache_live.png"));
+        StackPane.setMargin(liveLogo, new Insets(0, 10, 20, 0));
+        StackPane rightContent = new StackPane();
+        rightContent.setAlignment(Pos.BOTTOM_RIGHT);
+        rightContent.getChildren().add(map);
+        rightContent.getChildren().add(liveLogo);
+
         SplitPane pane = new SplitPane();
-        pane.getItems().addAll(leftContent, map);
+        pane.getItems().addAll(leftContent, rightContent);
 
         root.setCenter(pane);
 

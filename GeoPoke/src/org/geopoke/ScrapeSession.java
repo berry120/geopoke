@@ -79,7 +79,6 @@ public class ScrapeSession implements GeoSession {
         }
     }
 
-    @Override
     public boolean login() {
         HttpPost postMethod = new HttpPost("https://www.geocaching.com/login/default.aspx");
         List<NameValuePair> postData = new ArrayList<>();
