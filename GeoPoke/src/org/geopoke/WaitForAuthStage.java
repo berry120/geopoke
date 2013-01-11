@@ -18,6 +18,7 @@ package org.geopoke;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,6 +34,7 @@ public class WaitForAuthStage extends Stage {
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UTILITY);
         setTitle("Waiting for authorisation...");
+        getIcons().add(new Image("file:img/logo.png"));
         BorderPane root = new BorderPane();
         Label l = new Label("Welcome to Geopoke! We're just authorising you with your geocaching account, please authorise the application in your browser window. When you're authorised, this dialog will disappear and Geopoke will start up!");
         l.setWrapText(true);

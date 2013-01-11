@@ -19,6 +19,7 @@ package org.geopoke;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,6 +36,7 @@ public class ModalProgressDialog extends Stage {
     public ModalProgressDialog(String text) {
         initModality(Modality.APPLICATION_MODAL);
         initStyle(StageStyle.UNDECORATED);
+        getIcons().add(new Image("file:img/logo.png"));
         setResizable(false);
         setTitle(text);
         
