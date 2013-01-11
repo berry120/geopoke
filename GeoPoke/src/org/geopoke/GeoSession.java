@@ -28,4 +28,6 @@ public interface GeoSession {
     
     Geocache getCacheFromURL(String url);
     
+    boolean isLimited();
+    
 }

@@ -163,8 +163,11 @@ public class Main extends Application {
                             @Override
                             public void run() {
                                 if(cache == null || cache.getBestCoords() == null) {
-                                    Dialog.showError("Error retrieving Geocache",
-                                            "Did you definitely specify a valid GC number? If you're just a basic member, then your cache count has probably expired for the day.");
+                                    String error = "Did you definitely specify a valid GC number? ";
+                                    if(session.isLimited()) {
+                                        error += "If so, as a basic member your cache count has probably expired for the day.";
+                                    }
+                                    Dialog.showError("Error retrieving Geocache", error);
                                 }
                                 else {
                                     mainList.addCache(cache);

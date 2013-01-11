@@ -125,4 +125,9 @@ public class ScrapeSession implements GeoSession {
             return null;
         }
     }
+
+    @Override
+    public boolean isLimited() {
+        return false;
+    }
 }

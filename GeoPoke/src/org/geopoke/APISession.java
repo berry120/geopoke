@@ -107,6 +107,7 @@ public class APISession implements GeoSession {
         }
     }
 
+    @Override
     public boolean isLimited() {
         if(limited == null) {
             try {
@@ -140,7 +141,7 @@ public class APISession implements GeoSession {
             if(apiCache == null || !apiCache.getCacheCode().trim().equalsIgnoreCase(gcCode.trim())) {
                 return null;
             }
-            if(limited) {
+            if(isLimited()) {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
