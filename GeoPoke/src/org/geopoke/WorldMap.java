@@ -32,6 +32,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -117,7 +118,7 @@ public class WorldMap extends BorderPane {
         if(!east) {
             lon *= -1;
         }
-        webview.getEngine().executeScript("document.addMarker(" + lat + "," + lon + ",\"" + labelImage.toURI().toString() + "\",\"" + node.getCache().getName() + "\")");
+        webview.getEngine().executeScript("document.addMarker(" + lat + "," + lon + ",\"" + labelImage.toURI().toString() + "\",\"" + StringEscapeUtils.escapeEcmaScript(node.getCache().getName()) + "\")");
 //        webview.getEngine().executeScript("document.goToLocation(\"" + coords + "\")");
         webview.getEngine().executeScript("document.fitAllMarkers()");
     }
