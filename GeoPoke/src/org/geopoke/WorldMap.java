@@ -26,7 +26,9 @@ import java.util.Set;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Bounds;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Window;
@@ -68,20 +70,9 @@ public class WorldMap extends BorderPane {
      * @return the current snapshot of the map.
      */
     public BufferedImage getSnapshot() {
-        Window window = getScene().getWindow();
-        Bounds b = localToScene(getBoundsInLocal());
-        int x = (int) Math.round(window.getX() + getScene().getX() + b.getMinX());
-        int y = (int) Math.round(window.getY() + getScene().getY() + b.getMinY());
-        int w = (int) Math.round(b.getWidth());
-        int h = (int) Math.round(b.getHeight());
-        try {
-            Robot robot = new Robot();
-            BufferedImage image = robot.createScreenCapture(new java.awt.Rectangle(x, y, w, h));
-            return image;
-        }
-        catch(AWTException ex) {
-            return null;
-        }
+        BufferedImage image = SwingFXUtils.fromFXImage(getScene().snapshot(null), null);
+        Bounds bounds = localToScene(getLayoutBounds());
+        return image.getSubimage((int)bounds.getMinX(), (int)bounds.getMinY(), (int)getWidth(), (int)getHeight());
     }
 
     public boolean isReady() {
