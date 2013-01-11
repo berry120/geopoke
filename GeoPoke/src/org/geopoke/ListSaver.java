@@ -44,9 +44,29 @@ public class ListSaver {
                     BufferedReader reader = new BufferedReader(new FileReader(file));
                     String cacheNums = reader.readLine();
                     String[] parts = cacheNums.split(",");
-                    for (int i = 0; i < parts.length; i++) {
+                    for(int i = 0; i < parts.length; i++) {
                         String cacheNum = parts[i];
-                        caches.add(session.getCacheFromGC(cacheNum));
+                        Geocache cache = null;
+                        int retries = 0;
+                        while(cache == null && retries < 3) {
+                            if(retries != 0) {
+                                LOGGER.log(Level.WARNING, "Null cache, sleeping...");
+                                try {
+                                    Thread.sleep(15000); //15 seconds
+                                }
+                                catch(InterruptedException ex) {
+                                    LOGGER.log(Level.WARNING, "Interrupted :-(", ex);
+                                }
+                            }
+                            cache = session.getCacheFromGC(cacheNum);
+                            retries++;
+                        }
+                        if(cache != null) {
+                            caches.add(cache);
+                        }
+                        else {
+                            LOGGER.log(Level.WARNING, "Some caches didn't make it.");
+                        }
                         final double val = ((double) (i + 1)) / parts.length;
                         Platform.runLater(new Runnable() {
                             @Override
@@ -56,13 +76,13 @@ public class ListSaver {
                         });
                     }
                     Platform.runLater(new Runnable() {
-
                         @Override
                         public void run() {
                             finished.call(caches.toArray(new Geocache[caches.size()]));
                         }
                     });
-                } catch (IOException ex) {
+                }
+                catch(IOException ex) {
                     LOGGER.log(Level.WARNING, "Couldn't get caches from file", ex);
                 }
             }
@@ -72,15 +92,16 @@ public class ListSaver {
 
     public void saveCaches(List<Geocache> caches, File file) {
         StringBuilder content = new StringBuilder();
-        for (int i = 0; i < caches.size(); i++) {
+        for(int i = 0; i < caches.size(); i++) {
             content.append(caches.get(i).getGcNum());
-            if (i < caches.size() - 1) {
+            if(i < caches.size() - 1) {
                 content.append(',');
             }
         }
-        try (PrintWriter pw = new PrintWriter(file)) {
+        try(PrintWriter pw = new PrintWriter(file)) {
             pw.println(content);
-        } catch (IOException ex) {
+        }
+        catch(IOException ex) {
             LOGGER.log(Level.WARNING, "Couldn't save caches to file", ex);
             ex.printStackTrace();
         }
