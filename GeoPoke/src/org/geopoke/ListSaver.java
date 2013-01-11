@@ -36,10 +36,11 @@ public class ListSaver {
     private static final Logger LOGGER = Logger.getLogger(ListSaver.class.getName());
 
     public void getCaches(final GeoSession session, final File file,
-            final ProgressUpdator updator, final Callback<Geocache[]> finished) {
+            final ProgressUpdator updator, final Callback<GeocacheResult> finished) {
         Thread t = new Thread() {
             public void run() {
                 try {
+                    final List<String> unsuccessful = new ArrayList<>();
                     final List<Geocache> caches = new ArrayList<>();
                     BufferedReader reader = new BufferedReader(new FileReader(file));
                     String cacheNums = reader.readLine();
@@ -61,11 +62,12 @@ public class ListSaver {
                             cache = session.getCacheFromGC(cacheNum);
                             retries++;
                         }
-                        if(cache != null) {
-                            caches.add(cache);
+                        if(cache == null) {
+                            unsuccessful.add(cacheNum);
+                            LOGGER.log(Level.WARNING, "{0} didn''t make it.", cacheNum);
                         }
                         else {
-                            LOGGER.log(Level.WARNING, "Some caches didn't make it.");
+                            caches.add(cache);
                         }
                         final double val = ((double) (i + 1)) / parts.length;
                         Platform.runLater(new Runnable() {
@@ -78,7 +80,7 @@ public class ListSaver {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            finished.call(caches.toArray(new Geocache[caches.size()]));
+                            finished.call(new GeocacheResult(caches, unsuccessful));
                         }
                     });
                 }

@@ -52,6 +52,10 @@ public class CacheList extends VBox {
         }
         return ret;
     }
+    
+    public void addCache(List<Geocache> caches) {
+        addCache(null, caches.toArray(new Geocache[caches.size()]));
+    }
 
     public void addCache(Geocache... caches) {
         addCache(null, caches);

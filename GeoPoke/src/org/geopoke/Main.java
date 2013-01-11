@@ -281,11 +281,21 @@ public class Main extends Application {
             public void update(double percentDone) {
                 dialog.setProgress(percentDone);
             }
-        }, new Callback<Geocache[]>() {
+        }, new Callback<GeocacheResult>() {
             @Override
-            public void call(Geocache[] caches) {
+            public void call(GeocacheResult result) {
                 mainList.removeAllCaches();
-                mainList.addCache(caches);
+                mainList.addCache(result.getCaches());
+                if(!result.getUnsuccessful().isEmpty()) {
+                    StringBuilder cacheList = new StringBuilder();
+                    for(int i = 0; i < result.getUnsuccessful().size(); i++) {
+                        cacheList.append(result.getUnsuccessful().get(i));
+                        if(i < result.getUnsuccessful().size() - 1) {
+                            cacheList.append(", ");
+                        }
+                    }
+                    Dialog.showWarning("Some caches were unsuccessful", "Some caches could not be retrieved and will not show up in the list: " + cacheList.toString());
+                }
                 currentFile = file;
             }
         });
