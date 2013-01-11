@@ -36,6 +36,8 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javafx.application.Platform;
+import name.antonsmirnov.javafx.dialog.Dialog;
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -54,16 +56,17 @@ import org.geopoke.keys.keybash.KeyBash;
  */
 public class APISession implements GeoSession {
 
-    public static final String OAUTH_URL = "https://staging.geocaching.com/OAuth/oauth.ashx";
+    public static final String OAUTH_URL = "https://www.geocaching.com/OAuth/oauth.ashx";
     public static final String OAUTH_CALLBACK_URL = "http://localhost:20586/";
     private static final String CLOSE_WINDOW_JS = "HTTP/1.0 200 OK\nConnection: close\nServer: SimpleHTTPtutorial v0\nContent-Type: text/html\n\n<html><script language='javascript'>function happycode(){close();}</script><body><script>window.onload=happycode;</script><h1>Thanks!</h1><p>Authorisation complete, you can close this window now.</p></body></html>\n";
     private GeocachingApi api;
+    private Boolean limited = null;
 
     public boolean login() {
         try {
             Logger.getRootLogger().setLevel(Level.WARN);
             String token = getToken();
-            api = new LiveGeocachingApi("https://staging.api.groundspeak.com/Live/v6beta/geocaching.svc");
+            api = new LiveGeocachingApi("https://api.groundspeak.com/LiveV6/Geocaching.svc");
             api.openSession(token);
             return true;
         }
@@ -76,7 +79,7 @@ public class APISession implements GeoSession {
     private String getToken() {
         Preferences prefs = Preferences.userRoot().node("Geopoke");
         String token = prefs.get("token", null);
-        if(token!=null) {
+        if(token != null) {
             return token;
         }
         try {
@@ -103,18 +106,21 @@ public class APISession implements GeoSession {
             return null;
         }
     }
-    
+
     public boolean isLimited() {
-        try {
-            UserProfile profile = api.getYourUserProfile(false, false, false, false, false, false,
-                    new DeviceInfo(2147483647, 2147483647, "String content", "String content", "String content", "String content", (float)1.26743233E+15, "String content", "String content", "String content"));
-            MemberType type = profile.getUser().getMemberType();
-            return type==MemberType.Basic||type==MemberType.Guest;
+        if(limited == null) {
+            try {
+                UserProfile profile = api.getYourUserProfile(false, false, false, false, false, false,
+                        new DeviceInfo(2147483647, 2147483647, "String content", "String content", "String content", "String content", (float) 1.26743233E+15, "String content", "String content", "String content"));
+                MemberType type = profile.getUser().getMemberType();
+                limited = type == MemberType.Basic || type == MemberType.Guest;
+            }
+            catch(GeocachingApiException ex) {
+                ex.printStackTrace();
+                return false;
+            }
         }
-        catch(GeocachingApiException ex) {
-            ex.printStackTrace();
-            return true;
-        }
+        return limited;
     }
 
     @Override
@@ -131,8 +137,16 @@ public class APISession implements GeoSession {
     public Geocache getCacheFromGC(String gcCode) {
         try {
             com.arcao.geocaching.api.data.Geocache apiCache = api.getCache(gcCode, 10, 0);
-            if(apiCache==null||!apiCache.getCacheCode().trim().equalsIgnoreCase(gcCode.trim())) {
+            if(apiCache == null || !apiCache.getCacheCode().trim().equalsIgnoreCase(gcCode.trim())) {
                 return null;
+            }
+            if(limited) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        Dialog.showWarning("Limited member", "As a basic member of geocaching.com you can download full details of just 3 caches per 24 hour period. Upgrade to geocaching.com premium membership today for only US $30 per year to download the full details for up to 6000 caches per day.");
+                    }
+                });
             }
             Geocache ret = new Geocache(apiCache);
             ret.setDisabledWarning(apiCache.isArchived() || !apiCache.isAvailable());
@@ -150,10 +164,10 @@ public class APISession implements GeoSession {
         int max = 2;
         for(int i = 0; i < logs.size() && i < max; i++) {
             CacheLog log = logs.get(i);
-            if(log.getLogType()==CacheLogType.FoundIt || log.getLogType() == CacheLogType.OwnerMaintenance) {
+            if(log.getLogType() == CacheLogType.FoundIt || log.getLogType() == CacheLogType.OwnerMaintenance) {
                 return true;
             }
-            else if(log.getLogType()!=CacheLogType.DidntFindIt) {
+            else if(log.getLogType() != CacheLogType.DidntFindIt) {
                 max++;
             }
         }
@@ -163,11 +177,11 @@ public class APISession implements GeoSession {
     @Override
     public Geocache getCacheFromURL(String url) {
         if(url.toLowerCase().contains("coord.info")) {
-            String gc = url.substring(url.lastIndexOf('/')+1);
+            String gc = url.substring(url.lastIndexOf('/') + 1);
             return getCacheFromGC(gc);
         }
         if(url.contains("wp=")) {
-            String gc = url.substring(url.lastIndexOf("wp=")+1);
+            String gc = url.substring(url.lastIndexOf("wp=") + 1);
             return getCacheFromGC(gc);
         }
         return null;

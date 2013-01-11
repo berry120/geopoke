@@ -46,9 +46,6 @@ public class SessionFactory {
         t.start();
         stage.showAndWait();
         if(apiLoginok) {
-            if(apiSession.isLimited()) {
-                Dialog.showWarning("Bit limited :-/", "You will only be able to access 3 geocaches a day with this application until you\nupgrade to premium membership on geocaching.com - sorry about that.");
-            }
             return apiSession;
         }
         else {

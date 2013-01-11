@@ -164,7 +164,7 @@ public class Main extends Application {
                             public void run() {
                                 if(cache == null || cache.getBestCoords() == null) {
                                     Dialog.showError("Error retrieving Geocache",
-                                            "Did you definitely specify a valid GC number?");
+                                            "Did you definitely specify a valid GC number? If you're just a basic member, then your cache count has probably expired for the day.");
                                 }
                                 else {
                                     mainList.addCache(cache);
