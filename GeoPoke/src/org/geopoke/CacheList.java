@@ -91,7 +91,6 @@ public class CacheList extends VBox {
     public void removeCache(CacheDetailsNode node) {
         int pos = cacheDetailsNodes.indexOf(node);
         cacheDetailsNodes.remove(node);
-        map.removeMarker(node);
         getChildren().remove(node);
         for (int i = pos; i < cacheDetailsNodes.size(); i++) {
             cacheDetailsNodes.get(i).setLabel((i + 1) + ".");
@@ -99,6 +98,7 @@ public class CacheList extends VBox {
         for (SizeListener listener : sizeListeners) {
             listener.sizeChanged(cacheDetailsNodes.size() + 1, cacheDetailsNodes.size());
         }
+        map.removeMarker(node);
     }
 
     public void removeAllCaches() {

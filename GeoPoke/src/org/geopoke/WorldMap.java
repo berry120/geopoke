@@ -124,7 +124,7 @@ public class WorldMap extends BorderPane {
     }
 
     public void removeMarker(CacheDetailsNode node) {
-        webview.getEngine().executeScript("document.removeMarker(\"" + node.getLabel() + "\")");
+        webview.getEngine().executeScript("document.removeMarker(\"" +StringEscapeUtils.escapeEcmaScript(node.getCache().getName()) + "\")");
         markers.remove(node);
     }
 
